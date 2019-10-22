@@ -12,6 +12,9 @@ build project
 ### `npm install && npm dev`
 install latest updates after `git pull` and run development server
 
-## Components 
-
+ 
 ## Other Sources
+####  Material UI 
+https://material-ui.com/
+####  react-chartsjs-2
+https://github.com/jerairrest/react-chartjs-2 
