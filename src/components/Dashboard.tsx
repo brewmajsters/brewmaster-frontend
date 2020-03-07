@@ -6,7 +6,164 @@ import {makeStyles, Typography} from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import orange from "@material-ui/core/colors/orange";
+import ReactApexChart from "react-apexcharts";
+// @ts-ignore
+import ApexCharts from 'apexcharts';
 
+let lastDate = 0;
+let data1 = [];
+let TICKINTERVAL = 86400000;
+let XAXISRANGE = 777600000;
+function getDayWiseTimeSeries(baseval, count, yrange) {
+    var i = 0;
+    while (i < count) {
+        var x = baseval;
+        var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+
+        data1.push({
+            x, y
+        });
+        lastDate = baseval
+        baseval += TICKINTERVAL;
+        i++;
+    }
+}
+
+getDayWiseTimeSeries(new Date('11 Feb 2017 GMT').getTime(), 10, {
+    min: 10,
+    max: 90
+})
+
+function getNewSeries(baseval, yrange) {
+    let newDate = baseval + TICKINTERVAL;
+    lastDate = newDate
+
+    for(let i = 0; i< data1.length - 10; i++) {
+        // IMPORTANT
+        // we reset the x and y of the data which is out of drawing area
+        // to prevent memory leaks
+        data1[i].x = newDate - XAXISRANGE - TICKINTERVAL
+        data1[i].y = 0
+    }
+
+    data1.push({
+        x: newDate,
+        y: Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min
+    })
+
+}
+
+function resetData(){
+    // Alternatively, you can also reset the data at certain intervals to prevent creating a huge series
+    data1 = data1.slice(data1.length - 10, data1.length);
+}
+
+class LineChart extends React.Component {
+    state = {
+         options: {},
+         series: [],
+    };
+
+    constructor(props) {
+        super(props);
+
+
+    }
+    componentDidMount() {
+            this.setState({
+
+                    options: {
+                        chart: {
+                            id: 'chart',
+                            animations: {
+                                enabled: true,
+                                easing: 'linear',
+                                dynamicAnimation: {
+                                    speed: 1000
+                                }
+                            },
+                            toolbar: {
+                                show: false
+                            },
+                            zoom: {
+                                enabled: false
+                            }
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            curve: 'smooth'
+                        },
+
+                        title: {
+                            text: 'Dynamic Updating Chart',
+                            align: 'left'
+                        },
+                        markers: {
+                            size: 0
+                        },
+                        xaxis: {
+                            type: 'datetime',
+                            range: XAXISRANGE,
+                        },
+                        yaxis: {
+                            max: 100
+                        },
+                        legend: {
+                            show: false
+                        }
+                    },
+                    series: [{
+                        data: data1.slice()
+                    }],
+                }
+            );
+        this.intervals();
+    }
+
+    intervals () {
+        window.setInterval(() => {
+            getNewSeries(lastDate, {
+                min: 10,
+                max: 90
+            })
+
+            ApexCharts.exec('chart', 'updateSeries', [{
+                data: data1,
+            }])
+        }, 1000)
+    }
+
+    render() {
+
+        return (
+
+
+            <div id="chart">
+                <ReactApexChart options={{
+                    chart: {
+                    id: 'chart',
+                    animations: {
+                    enabled: true,
+                    easing: 'linear',
+                    dynamicAnimation: {
+                    speed: 1000
+                }
+                },
+                    toolbar: {
+                    show: false
+                },
+                    zoom: {
+                    enabled: false
+                }
+                }}} series={this.state.series} type="line" height="350" />
+            </div>
+
+        );
+    }
+
+};
 
 
 const data = {
@@ -116,7 +273,7 @@ const classes = useStyles();
                             <CardContent>
                                 <Typography variant={"h5"}>Tlak</Typography>
                             </CardContent>
-                            <Line data={data} />
+                            <LineChart/>
                         </Card>
                     </Grid>
 
