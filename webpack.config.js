@@ -3,7 +3,11 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry:  path.join(__dirname, '/src/index.tsx'),
+    entry: [
+        'webpack-dev-server/client?http://0.0.0.0:80',
+        'webpack/hot/only-dev-server',
+        path.join(__dirname, '/src/index.tsx')
+    ],
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
     },
