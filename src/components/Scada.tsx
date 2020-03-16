@@ -42,8 +42,8 @@ const useStyles = makeStyles(theme => ({
 		backgroundImage: 'url("/public/boiler_black.png")'
 	},
 	boilerRPM: { 
-
-	} 
+// todo:
+	} ,
 	transmission: {
 		position: 'relative',
 		left: '0rem',
@@ -70,6 +70,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function ScadaImage(){
+	//@ts-ignore
 	const classes = useStyles();
 	return (
 		<div className={classes.container} >
@@ -84,8 +85,8 @@ function ScadaImage(){
 				</div>
 			</div>
 			<div > 
-				<Paper component="form" className={classes.root}>
-					<InputBase
+				<Paper>
+ 					<InputBase
 		className={classes.input}
 		placeholder="Set RPM per engine"
 		inputProps={{ 'aria-label': 'set rpm for engine' }}
