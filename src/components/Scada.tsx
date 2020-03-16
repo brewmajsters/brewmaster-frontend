@@ -10,6 +10,7 @@ import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 
+
 const useStyles = makeStyles(theme => ({
 	container: {
 		width: '100%',
@@ -42,8 +43,8 @@ const useStyles = makeStyles(theme => ({
 		backgroundImage: 'url("/public/boiler_black.png")'
 	},
 	boilerRPM: { 
-
-	} 
+// todo: 
+	}, 
 	transmission: {
 		position: 'relative',
 		left: '0rem',
@@ -65,12 +66,12 @@ const useStyles = makeStyles(theme => ({
 	},
 	submitButton: {
 		padding: 10,
-	},
-
+	}
 }));
 
-function ScadaImage(){
-	const classes = useStyles();
+function ScadaImage() {
+	//@ts-ignore
+	var classes = useStyles();
 	return (
 		<div className={classes.container} >
 			<div className={classes.boilerBlack}> 
@@ -84,7 +85,7 @@ function ScadaImage(){
 				</div>
 			</div>
 			<div > 
-				<Paper component="form" className={classes.root}>
+				<Paper>
 					<InputBase
 		className={classes.input}
 		placeholder="Set RPM per engine"
