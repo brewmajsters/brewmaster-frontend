@@ -9,11 +9,20 @@ import orange from "@material-ui/core/colors/orange";
 import ReactApexChart from "react-apexcharts";
 // @ts-ignore
 import ApexCharts from 'apexcharts';
-import openSocket from 'socket.io-client';
+import {w3cwebsocket as WebSocket } from "websocket";
+
+const wsClient = new WebSocket('ws://localhost:5000/test_web_socket');
+
+wsClient.onopetn = () => {
+    console.log("ws connected");
+}
 
 
-const socket = openSocket('http://127.0.0.1:5000/test_web_socket');
-const heater = 	socket.on('heater', (msg)=> console.log(msg));
+wsClient.onmessage = (message) => {
+    console.log(message);
+}
+
+
 
 let lastDate = 0;
 let data1 = [];
