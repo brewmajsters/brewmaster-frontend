@@ -1,7 +1,5 @@
 import React = require('react');
 import {Component} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
@@ -11,46 +9,21 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import HistoryIcon from '@material-ui/icons/History';
 import LocalDrinkIcon from '@material-ui/icons/LocalDrink';
-import { useTheme } from '@material-ui/core/styles';
 import {
 	BrowserRouter as Router,
 	Switch,
 	Route,
 	Link
 } from "react-router-dom";
+import getClasses from '../styles/navbars_style';
 
+
+const classes = getClasses();
 
 const drawerWidth = 240;
 
 
-const classes = {
-	root: {
-		display: 'flex',
-	},
-	appBar: {
-		zIndex: 1,
-	},
-	drawer: {
-		flexShrink: 0,
-		position: 'relative' as 'relative',
-		zIndex: 0,  
-		marginTop: '50px', 
-		width: '300px',
-		padding: 10,
-	},
-	drawerPaper: {
-		marginTop: 50, 
-		width: 300,
-		padding: 10,
-		zIndex: 1,
-	},
-	content: {
-		flexGrow: '1',
-	}
-	//toolbar: theme.mixins.toolbar,
-}; 
 
 export function TopBar(){
 	return (
