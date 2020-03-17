@@ -257,43 +257,65 @@ alert: {
 }
 }));
 
+
+const Chart = function (props: {name: string, data: any}) { 
+    return (
+        <Card>
+            <CardContent>
+                <Typography
+                    variant={"h5"}
+                >
+                    {props.name}
+                </Typography>
+            </CardContent>
+            <Line
+                data={props.data}
+            />
+        </Card>
+    );
+
+}
+
 export default function Dashboard(){
 // @ts-ignore
 const classes = useStyles();
     return (
-            <div>
-                <Grid container spacing={10}>
-                    <Grid item xs={1}/>
-
-                    <Grid item xs={5}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant={"h5"}>Teplota</Typography>
-                            </CardContent>
-                        <Line data={data} />
-                        </Card>
+                <Grid 
+                    container
+                    spacing={3}
+                >
+                    <Grid 
+                        item
+                        xs={6}
+                    >
+                        <Chart name={"Teplota"} data={data}/>
                     </Grid>
-                    <Grid item xs={5}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant={"h5"}>Hustota</Typography>
-                            </CardContent>
-                            <Line data={data} />
-                        </Card>
+                    <Grid 
+                        item
+                        xs={6}
+                    >
+                        
                     </Grid>
-                    <Grid item xs={1}/>
-                    <Grid item xs={1}/>
-                    <Grid item xs={5}>
-                        <Card className={classes.alert}>
+                    <Grid 
+                        item
+                        xs={6}
+                    >
+                        <Card
+                            className={classes.alert}
+                        >
                             <CardContent>
-                                <Typography variant={"h5"}>Tlak</Typography>
+                                <Typography
+                                    variant={"h5"}
+                                >
+                                    Tlak
+                                </Typography>
                             </CardContent>
                             <LineChart/>
                         </Card>
                     </Grid>
 
                 </Grid>
-            </div>
         );
 
 };
+

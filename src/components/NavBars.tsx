@@ -1,4 +1,5 @@
 import React = require('react');
+import {Component} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -24,69 +25,87 @@ import {
 const drawerWidth = 240;
 
 
-const useStyles = makeStyles(theme => ({
+const classes = {
 	root: {
 		display: 'flex',
 	},
 	appBar: {
-		zIndex: theme.zIndex.drawer + 1,
-
+		zIndex: 1,
 	},
 	drawer: {
-		width: drawerWidth,
 		flexShrink: 0,
+		position: 'relative' as 'relative',
+		zIndex: 0,  
+		marginTop: '50px', 
+		width: '300px',
+		padding: 10,
 	},
 	drawerPaper: {
-		width: drawerWidth,
+		marginTop: 50, 
+		width: 300,
+		padding: 10,
+		zIndex: 1,
 	},
 	content: {
-		flexGrow: 1,
-		padding: theme.spacing(3),
-	},
-	toolbar: theme.mixins.toolbar,
-}));
+		flexGrow: '1',
+	}
+	//toolbar: theme.mixins.toolbar,
+}; 
 
-export default function NavBars(){
-	// @ts-ignore
-	const classes = useStyles();
+export function TopBar(){
 	return (
-		<div>
-			<AppBar  position="fixed" className={classes.appBar}>
+			<AppBar  position="fixed" style={classes.appBar}>
 				<Toolbar>
 					<Typography variant="h4" color={"inherit"} noWrap>
 						<LocalDrinkIcon/> Smartbrew - Brewmasters
 					</Typography>
 				</Toolbar>
 			</AppBar>
-			<Drawer
-				className={classes.drawer}
-				variant="permanent"
-				classes={{
-					paper: classes.drawerPaper,
-				}}
-			>
-				<div className={classes.toolbar} />
+			
+	);
+}
+
+export class LeftBar extends Component{
+	
+	
+	render(){
+		return(
+			<div>
 				<List>
-					<Link to="/"> 
-					<ListItem button>
-						<ListItemIcon>
-							<DashboardIcon/> 
-						</ListItemIcon>
-						<ListItemText primary="Scada"/> 
-					</ListItem>
-				</Link>
-					<Link to="/dashboard"> 
-						<ListItem button key="Dashboard">  
+					<Link 
+						to="/"
+					> 
+						<ListItem 
+							button
+						>
 							<ListItemIcon>
 								<DashboardIcon/> 
 							</ListItemIcon>
-							<ListItemText primary="Dashboard"/> 
+							<ListItemText
+								primary="Scada"
+							/> 
+						</ListItem>
+					</Link>
+
+					<Link 
+						to="/dashboard"
+					> 
+						<ListItem 
+							button 
+							key="Dashboard"
+						>  
+							<ListItemIcon>
+								<DashboardIcon/> 
+							</ListItemIcon>
+							<ListItemText
+								primary="Dashboard"
+							/> 
 						</ListItem>
 					</Link>
 				</List>
-				<Divider />
-			</Drawer>
-		</div>
-	);
-
+				<Divider/>
+			</div>
+		);
+	}
 }
+export default LeftBar;

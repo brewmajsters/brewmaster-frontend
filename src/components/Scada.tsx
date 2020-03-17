@@ -10,12 +10,12 @@ import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 
-const useStyles = makeStyles(theme => ({
+const classes = {
 	container: {
 		width: '100%',
 	},
 	motorBlack: {
-		position: 'relative',
+		position: 'relative' as 'relative',
 		top: '-145px',
 		left: '229px',
 		color: 'white',
@@ -27,13 +27,13 @@ const useStyles = makeStyles(theme => ({
 	},
 	motorRPM: {
 		color: 'white', 
-		position: 'relative', 
+		position: 'relative' as 'relative', 
 		top: '71px',
 		left: '200px',
 		fontFamily: 'Roboto',
 	}, 
 	boilerBlack: {
-		position: 'relative',
+		position: 'relative' as 'relative',
 		left: '34px',
 		minWidth: '171px',
 		minHeight: '210px',
@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 // todo:
 	} ,
 	transmission: {
-		position: 'relative',
+		position: 'relative' as 'relative' ,
 		left: '0rem',
 		minWidth: '228px',
 		minHeight: '172px',
@@ -60,38 +60,36 @@ const useStyles = makeStyles(theme => ({
 		width: 400,
 	},
 	input: {
-		marginLeft: theme.spacing(1),
 		flex: 1,
 	},
 	submitButton: {
 		padding: 10,
 	},
 
-}));
+};
 
 function ScadaImage(){
-	//@ts-ignore
-	const classes = useStyles();
+
 	return (
-		<div className={classes.container} >
-			<div className={classes.boilerBlack}> 
+		<div style={classes.container} >
+			<div style={classes.boilerBlack}> 
 
 			</div>
-			<div className={classes.transmission}>
+			<div style={classes.transmission}>
 			</div> 
-			<div className={classes.motorBlack}> 
-				<div className={classes.motorRPM}> 
+			<div style={classes.motorBlack}> 
+				<div style={classes.motorRPM}> 
 					100 rpm
 				</div>
 			</div>
 			<div > 
 				<Paper>
  					<InputBase
-		className={classes.input}
+		style={classes.input}
 		placeholder="Set RPM per engine"
 		inputProps={{ 'aria-label': 'set rpm for engine' }}
 		/>
-		<IconButton type="submit" className={classes.submitButton} aria-label="search">
+		<IconButton type="submit" style={classes.submitButton} aria-label="search">
 		Submit! 
 	</IconButton>
 </Paper>
@@ -107,9 +105,7 @@ function ScadaImage(){
 
 
 export default function Scada(){
-	//@ts-ignore
 
-	const classes = useStyles();
 	return (
 
 	<div>
