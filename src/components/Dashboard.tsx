@@ -1,15 +1,18 @@
 import React = require('react');
 import {Line} from 'react-chartjs-2';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import {makeStyles, Typography} from "@material-ui/core";
+import {Typography} from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import orange from "@material-ui/core/colors/orange";
 import ReactApexChart from "react-apexcharts";
 // @ts-ignore
 import ApexCharts from 'apexcharts';
 import {w3cwebsocket as WebSocket } from "websocket";
+import getClasses from '../styles/dashboard_style';
+
+
+const classes = getClasses();
+
 
 const wsClient = new WebSocket('ws://localhost:5000/test_web_socket');
 
@@ -251,49 +254,66 @@ const data = {
     ]
 };
 
-const useStyles = makeStyles(theme => ({
-alert: {
-    boxShadow: '0px 0px 0px 4px rgba(255, 193, 7,1)',
+
+const Chart = function (props: {name: string, data: any}) { 
+    return (
+        <Card>
+            <CardContent>
+                <Typography
+                    variant={"h5"}
+                >
+                    {props.name}
+                </Typography>
+            </CardContent>
+            <Line
+                data={props.data}
+            />
+        </Card>
+    );
+
 }
-}));
+
+
+
 
 export default function Dashboard(){
-// @ts-ignore
-const classes = useStyles();
     return (
-            <div>
-                <Grid container spacing={10}>
-                    <Grid item xs={1}/>
-
-                    <Grid item xs={5}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant={"h5"}>Teplota</Typography>
-                            </CardContent>
-                        <Line data={data} />
-                        </Card>
+                <Grid 
+                    container
+                    spacing={3}
+                >
+                    <Grid 
+                        item
+                        xs={6}
+                    >
+                        <Chart name={"Teplota"} data={data}/>
                     </Grid>
-                    <Grid item xs={5}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant={"h5"}>Hustota</Typography>
-                            </CardContent>
-                            <Line data={data} />
-                        </Card>
+                    <Grid 
+                        item
+                        xs={6}
+                    >
+                        <Chart name={"Hustota"} data={data}/>
                     </Grid>
-                    <Grid item xs={1}/>
-                    <Grid item xs={1}/>
-                    <Grid item xs={5}>
-                        <Card className={classes.alert}>
+                    <Grid 
+                        item
+                        xs={6}
+                    >
+                        <Card
+                            style={classes.alert}
+                        >
                             <CardContent>
-                                <Typography variant={"h5"}>Tlak</Typography>
+                                <Typography
+                                    variant={"h5"}
+                                >
+                                    Tlak
+                                </Typography>
                             </CardContent>
                             <LineChart/>
                         </Card>
                     </Grid>
 
                 </Grid>
-            </div>
         );
 
 };
+
