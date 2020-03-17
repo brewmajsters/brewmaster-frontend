@@ -1,5 +1,5 @@
 import React = require('react');
-import {Component} from 'react';
+import { Component } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
@@ -23,60 +23,61 @@ const classes = getClasses();
 
 const drawerWidth = 240;
 
+const dashboard = DashboardIcon;
 
 
-export function TopBar(){
+export function TopBar() {
 	return (
-			<AppBar  position="fixed" style={classes.appBar}>
-				<Toolbar>
-					<Typography variant="h4" color={"inherit"} noWrap>
-						<LocalDrinkIcon/> Smartbrew - Brewmasters
+		<AppBar position="fixed" style={classes.appBar}>
+			<Toolbar>
+				<Typography variant="h4" color={"inherit"} noWrap>
+					<LocalDrinkIcon /> Smartbrew - Brewmasters
 					</Typography>
-				</Toolbar>
-			</AppBar>
-			
+			</Toolbar>
+		</AppBar>
+
 	);
 }
 
-export class LeftBar extends Component{
-	
-	
-	render(){
-		return(
+const LeftBarItem = (props: { path: string, name: string, icon: any }) => {
+
+	return (
+		<Link
+			to={props.path}
+		>
+			<ListItem
+				button
+			>
+				<ListItemIcon>
+					<DashboardIcon/>
+				</ListItemIcon>
+				<ListItemText
+					primary={props.name}
+				/>
+			</ListItem>
+		</Link>
+	);
+}
+
+export class LeftBar extends Component {
+
+
+	render() {
+		return (
 			<div>
 				<List>
-					<Link 
-						to="/"
-					> 
-						<ListItem 
-							button
-						>
-							<ListItemIcon>
-								<DashboardIcon/> 
-							</ListItemIcon>
-							<ListItemText
-								primary="Scada"
-							/> 
-						</ListItem>
-					</Link>
-
-					<Link 
-						to="/dashboard"
-					> 
-						<ListItem 
-							button 
-							key="Dashboard"
-						>  
-							<ListItemIcon>
-								<DashboardIcon/> 
-							</ListItemIcon>
-							<ListItemText
-								primary="Dashboard"
-							/> 
-						</ListItem>
-					</Link>
+					<LeftBarItem
+						path="/"
+						name="Scada"
+						icon="dashboard"
+					/>
+					<LeftBarItem
+						path="/dashboard"
+						name="Dashboard"
+						icon="dashboard"
+					/>
 				</List>
-				<Divider/>
+				<Divider />
 			</div>
 		);
 	}
