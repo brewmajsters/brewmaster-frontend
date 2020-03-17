@@ -1,11 +1,9 @@
 import React = require('react');
 import {Line} from 'react-chartjs-2';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import {makeStyles, Typography} from "@material-ui/core";
+import {Typography} from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import orange from "@material-ui/core/colors/orange";
 import ReactApexChart from "react-apexcharts";
 // @ts-ignore
 import ApexCharts from 'apexcharts';
@@ -251,12 +249,6 @@ const data = {
     ]
 };
 
-const useStyles = makeStyles(theme => ({
-alert: {
-    boxShadow: '0px 0px 0px 4px rgba(255, 193, 7,1)',
-}
-}));
-
 
 const Chart = function (props: {name: string, data: any}) { 
     return (
@@ -276,9 +268,14 @@ const Chart = function (props: {name: string, data: any}) {
 
 }
 
+const classes = {
+alert: {
+    boxShadow: '0px 0px 0px 4px rgba(255, 193, 7,1)',
+}
+};
+
+
 export default function Dashboard(){
-// @ts-ignore
-const classes = useStyles();
     return (
                 <Grid 
                     container
@@ -301,7 +298,7 @@ const classes = useStyles();
                         xs={6}
                     >
                         <Card
-                            className={classes.alert}
+                            style={classes.alert}
                         >
                             <CardContent>
                                 <Typography
