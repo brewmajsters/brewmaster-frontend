@@ -8,6 +8,11 @@ import ReactApexChart from "react-apexcharts";
 // @ts-ignore
 import ApexCharts from 'apexcharts';
 import {w3cwebsocket as WebSocket } from "websocket";
+import getClasses from '../styles/dashboard_style';
+
+
+const classes = getClasses();
+
 
 const wsClient = new WebSocket('ws://localhost:5000/test_web_socket');
 
@@ -268,11 +273,7 @@ const Chart = function (props: {name: string, data: any}) {
 
 }
 
-const classes = {
-alert: {
-    boxShadow: '0px 0px 0px 4px rgba(255, 193, 7,1)',
-}
-};
+
 
 
 export default function Dashboard(){
@@ -291,7 +292,7 @@ export default function Dashboard(){
                         item
                         xs={6}
                     >
-                        
+                        <Chart name={"Hustota"} data={data}/>
                     </Grid>
                     <Grid 
                         item
