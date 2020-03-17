@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import {Component} from 'react';
 import getClasses from '../styles/scada_style';
 
+
 const classes = getClasses();
 
 function ScadaImage(){
@@ -14,7 +15,6 @@ function ScadaImage(){
 	return (
 		<div style={classes.container} >
 			<div style={classes.boilerBlack}> 
-
 			</div>
 			<div style={classes.transmission}>
 			</div> 
@@ -35,13 +35,8 @@ function ScadaImage(){
 	</IconButton>
 </Paper>
 			</div> 
-
-
 		</div>
-
-
 	)
-
 }
 
 
