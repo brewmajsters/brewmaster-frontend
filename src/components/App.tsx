@@ -10,6 +10,7 @@ import {
 	Link
 } from "react-router-dom";
 import Scada from "./Scada";
+import Divider from "@material-ui/core/Divider";
 
 const drawerWidth = 240;
 
@@ -35,7 +36,7 @@ export default class App extends Component{
 					<div style={classes.body}>
 						<Grid 
 							container 
-							spacing={7}
+							spacing={2}
 						>
 							<Grid 
 								item
@@ -50,9 +51,10 @@ export default class App extends Component{
 							>
 								<LeftBar/>
 							</Grid> 
+							<Divider orientation="vertical"/>
 							<Grid 
 								item
-								xs={10}
+								xs={9}
 							>
 								<div 
 									style={classes.main}

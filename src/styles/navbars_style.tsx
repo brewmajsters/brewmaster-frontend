@@ -25,6 +25,17 @@ export default function getClasses() {
             },
             content: {
                 flexGrow: '1',
+            },
+            gridList: {
+                width: '170px',
+                marginTop: '50px',
+                marginLeft: '20px',
+                textAlign: 'center' as 'center',
+                align: 'center' as 'center'
+            },
+            leftBarTile: {
+                width: '170px',
+
             }
             //toolbar: theme.mixins.toolbar,
         });

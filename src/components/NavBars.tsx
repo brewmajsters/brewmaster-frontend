@@ -17,7 +17,8 @@ import {
 	Link
 } from "react-router-dom";
 import getClasses from '../styles/navbars_style';
-
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 
 const classes = getClasses();
 
@@ -39,25 +40,31 @@ export function TopBar() {
 	);
 }
 
-const LeftBarItem = (props: { path: string, name: string, icon: any }) => {
+
+const LeftBarItem = (props: { path: string, name: string, image: string }) => {
 
 	return (
 		<Link
 			to={props.path}
 		>
-			<ListItem
-				button
+			<Grid
+				item	
 			>
-				<ListItemIcon>
-					<DashboardIcon/>
-				</ListItemIcon>
-				<ListItemText
-					primary={props.name}
+				<img 
+					src={props.image} 
+					style={classes.leftBarTile}
 				/>
-			</ListItem>
+				<Typography
+					variant="h5"
+					>
+						{props.name}
+				</Typography>
+				<Divider/>
+			</Grid>
 		</Link>
 	);
 }
+
 
 export class LeftBar extends Component {
 
@@ -65,19 +72,22 @@ export class LeftBar extends Component {
 	render() {
 		return (
 			<div>
-				<List>
+				<Grid
+					container
+					spacing={5}
+					style={classes.gridList}	
+				>
 					<LeftBarItem
 						path="/"
 						name="Scada"
-						icon="dashboard"
+						image="/public/scadaIcon.png"
 					/>
 					<LeftBarItem
 						path="/dashboard"
 						name="Dashboard"
-						icon="dashboard"
+						image="/public/dashboardIcon.png"
 					/>
-				</List>
-				<Divider />
+				</Grid>
 			</div>
 		);
 	}
