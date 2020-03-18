@@ -1,16 +1,15 @@
 import React = require("react");
 import { Component } from "react"; 
+import getClasses from "../styles/tables_style";
 
+const classes = getClasses();
 
 export class Tables extends Component { 
-
-
-// todo: tuto mozes robit svoje tabulky, state moze mat iba component cize som ti vytvoril vlastny kopomnent , prepnes sa nan cez configuration 
-
+// todo: tuto mozes robit svoje tabulky, state moze mat iba
 
     render() {
         return (
-            <h1> It Wokrs! </h1>
+            <h1 style={classes.itWorks}> It Wokrs! </h1>
         );
     }
 }
