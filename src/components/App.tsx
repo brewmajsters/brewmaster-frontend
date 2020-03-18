@@ -10,6 +10,7 @@ import {
 	Link
 } from "react-router-dom";
 import Scada from "./Scada";
+import Tables from "./Tables";
 
 const drawerWidth = 240;
 
@@ -68,6 +69,11 @@ export default class App extends Component{
 												path="/dashboard/"
 											> 
 												<Dashboard />
+											</Route>
+											<Route
+												path="/tables/"
+												>
+												<Tables/>
 											</Route>
 										</div>
 									</Switch>

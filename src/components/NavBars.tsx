@@ -61,7 +61,6 @@ const LeftBarItem = (props: { path: string, name: string, icon: any }) => {
 
 export class LeftBar extends Component {
 
-
 	render() {
 		return (
 			<div>
@@ -74,6 +73,11 @@ export class LeftBar extends Component {
 					<LeftBarItem
 						path="/dashboard"
 						name="Dashboard"
+						icon="dashboard"
+					/>
+					<LeftBarItem
+						path="/tables/"
+						name="Configuration"
 						icon="dashboard"
 					/>
 				</List>
