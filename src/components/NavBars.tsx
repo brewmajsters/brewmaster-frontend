@@ -1,6 +1,5 @@
 import React = require('react');
-import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
+import { Component } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
@@ -10,68 +9,77 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import HistoryIcon from '@material-ui/icons/History';
 import LocalDrinkIcon from '@material-ui/icons/LocalDrink';
-import { useTheme } from '@material-ui/core/styles';
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Link
+} from "react-router-dom";
+import getClasses from '../styles/navbars_style';
 
 
+const classes = getClasses();
 
 const drawerWidth = 240;
 
+const dashboard = DashboardIcon;
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        display: 'flex',
-    },
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1,
 
-    },
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-    },
-    drawerPaper: {
-        width: drawerWidth,
-    },
-    content: {
-        flexGrow: 1,
-        padding: theme.spacing(3),
-    },
-    toolbar: theme.mixins.toolbar,
-}));
+export function TopBar() {
+	return (
+		<AppBar position="fixed" style={classes.appBar}>
+			<Toolbar>
+				<Typography variant="h4" color={"inherit"} noWrap>
+					<LocalDrinkIcon /> Smartbrew - Brewmasters
+					</Typography>
+			</Toolbar>
+		</AppBar>
 
-export default function NavBars(){
-// @ts-ignore
-    const classes = useStyles();
-    return (
-        <div>
-            <AppBar  position="fixed" className={classes.appBar}>
-                <Toolbar>
-                    <Typography variant="h4" color={"inherit"} noWrap>
-                        <LocalDrinkIcon/> Smartbrew - Brewmasters
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-            <Drawer
-                className={classes.drawer}
-                variant="permanent"
-                classes={{
-                    paper: classes.drawerPaper,
-                }}
-            >
-                <div className={classes.toolbar} />
-                <List>
-                    {['Dashboard', 'History' ].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <DashboardIcon/> : <HistoryIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
-                </List>
-                <Divider />
-            </Drawer>
-        </div>
-    );
-
+	);
 }
+
+const LeftBarItem = (props: { path: string, name: string, icon: any }) => {
+
+	return (
+		<Link
+			to={props.path}
+		>
+			<ListItem
+				button
+			>
+				<ListItemIcon>
+					<DashboardIcon/>
+				</ListItemIcon>
+				<ListItemText
+					primary={props.name}
+				/>
+			</ListItem>
+		</Link>
+	);
+}
+
+export class LeftBar extends Component {
+
+
+	render() {
+		return (
+			<div>
+				<List>
+					<LeftBarItem
+						path="/"
+						name="Scada"
+						icon="dashboard"
+					/>
+					<LeftBarItem
+						path="/dashboard"
+						name="Dashboard"
+						icon="dashboard"
+					/>
+				</List>
+				<Divider />
+			</div>
+		);
+	}
+}
+export default LeftBar;
