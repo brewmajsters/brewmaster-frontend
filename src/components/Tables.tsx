@@ -11,6 +11,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import { keys } from "@material-ui/core/styles/createBreakpoints";
 
 const classes = getClasses();
 
@@ -23,15 +24,13 @@ const headersProtocols = ["name","protocol"]
 
  export function tableHeaders(headerLabels: string[]){
     return (
-        <TableHead>
-            <TableRow>
+            <TableRow key="1">
             {headerLabels.map((label) =>
                 <TableCell>
                     {label}
                 </TableCell>
             )}
             </TableRow>
-        </TableHead>
     );
 }
 
@@ -41,23 +40,33 @@ interface DatapointsData {
     "units": string,
     "datapoint_code":string,
     "legend": string,
-    "writable": string,
+    "writable": boolean,
     "id": string
 }
 
-export function tableDatapoints(data: Object[]){
-    console.log("data")
-    console.log(data)
-
-    return(
+export function tableDatapoints(data: any){
+    return (
         <TableBody>
-            {data.map( row =>
-                <TableRow>
-                    {Object.keys(row).map(function(key, index) {
+            {data.map(row =>
+                <TableRow key={row.id}>
                     <TableCell>
-                        {row[key]}                       
+                        {row.name}
                     </TableCell>
-                    })}
+                    <TableCell>
+                        {row.units}
+                    </TableCell>
+                    <TableCell>
+                        {row.datapoint_code}
+                    </TableCell>
+                    <TableCell>
+                        {row.legend}
+                    </TableCell>
+                    <TableCell>
+                        {row.writable}
+                    </TableCell>
+                    <TableCell>
+                        {row.id}
+                    </TableCell>
                 </TableRow>
             )}
         </TableBody>
@@ -70,21 +79,7 @@ export class Tables extends Component<{},{datapointsData: any, datapointsIsLoade
     constructor(props){
         super(props);
         this.state = {
-            datapointsData: [{
-                    "name" : "string1",
-                    "units": "string1",
-                    "datapoint_code":"string1",
-                    "legend": "string1",
-                    "writable": "string1",
-                    "id": "string1"},
-                {
-                    "name" : "string2",
-                    "units": "string2",
-                    "datapoint_code":"string2",
-                    "legend": "string2",
-                    "writable": "string2",
-                    "id": "string2"}
-                ],
+            datapointsData: [],
             datapointsIsLoaded: false
         }
     }
@@ -94,13 +89,13 @@ export class Tables extends Component<{},{datapointsData: any, datapointsIsLoade
             fetch(link)
                 .then((response) => response.json())
                 .then((jsonData) => {
-                    console.log("jsonData")
-                    console.log(jsonData)
-                    // jsonData is parsed json object received from url
-                    return jsonData
-                }) //.then(data => {return data})
+                   this.setState({
+                        datapointsData: jsonData,
+                        datapointsIsLoaded: true
+                   }) 
+                   console.log(this.state)
+                }) 
                 .catch((error) => {
-                    // handle your errors here
                     console.log("Unable to get data")
                     console.log(error)
                 })
@@ -114,20 +109,18 @@ export class Tables extends Component<{},{datapointsData: any, datapointsIsLoade
                     //value={value}
                     onChange={(event, newValue) => {
                         this.buttonType = "test"//newValue.split('/')[5];
-                        let data =
                         this.setState({
-                            datapointsData: this.generateTable(newValue),
-                            datapointsIsLoaded: true
-
+                            datapointsIsLoaded: false
                         })
+                        this.generateTable(newValue);
                     }}
                     showLabels
                 >
-                    <BottomNavigationAction label="Datapoints" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/datapoints' icon={<FolderIcon />} />
-                    <BottomNavigationAction label="Protocol" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/protocols' icon={<FolderIcon />} />
-                    <BottomNavigationAction label="Device" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/devices' icon={<FolderIcon />} />
-                    <BottomNavigationAction label="Modules" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/modules' icon={<FolderIcon />} />
-                    <BottomNavigationAction label="Device Type" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/devicetypes' icon={<FolderIcon />} />
+                    <BottomNavigationAction key="1" label="Datapoints" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/datapoints' icon={<FolderIcon />} />
+                    <BottomNavigationAction key="2" label="Protocol" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/protocols' icon={<FolderIcon />} />
+                    <BottomNavigationAction key="3" label="Device" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/devices' icon={<FolderIcon />} />
+                    <BottomNavigationAction key="4" label="Modules" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/modules' icon={<FolderIcon />} />
+                    <BottomNavigationAction key="5" label="Device Type" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/devicetypes' icon={<FolderIcon />} />
 
                     </BottomNavigation>
             </div>
@@ -138,12 +131,16 @@ export class Tables extends Component<{},{datapointsData: any, datapointsIsLoade
     render() {
         return (
             <div>
-                <p>{this.buttonType}</p>
                 <this.ButtonNavigate name={"Buttons"} />
-                <Table>
-                    {tableHeaders(headersDatapoints)}    
+                
+                        {this.state.datapointsIsLoaded &&
+                    <Table>
+                    <TableHead> 
+                        {tableHeaders(headersDatapoints)}    
+                    </TableHead>
                     {tableDatapoints(this.state.datapointsData)}
                 </Table>
+                            }
             </div>
         );
 
