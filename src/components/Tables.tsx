@@ -12,16 +12,24 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { keys } from "@material-ui/core/styles/createBreakpoints";
+import { withStyles } from "@material-ui/core/styles";
 
-const classes = getClasses();
+const tablesClasses = getClasses();
 
-const headersDatapoints = ["name", "units","datapoint code", "legend","writable","id"]
+const headers = {'datapoints' : ["id", "module_device_type_id", "name", "units", "code","legend","writable"],
+                 'protocols' : ["id","datatype_id","name"],
+                 'devices' : ["id","module_id","uuid","address","poll_rate"],
+                 'devicetypes' : ["id","protocol_id","manufacturer","model","code"],
+                 'datatypes' : ["id","name"],
+                 'modules' : ["id","module_device_type_id","mac"]}
 
-const headers = {'datapoints' : ["name", "units", "datapoint code", "legend", "writable"],
-                 'protocols' : ["name","protocol"]}
-
-const headersProtocols = ["name","protocol"]
-
+/* Neviem naco je toto ked je vsetko v const headers
+const headersDatapoints = ["id", "module_device_type_id","name", "units","code","legend","writable"]
+const headersProtocols = ["id","datatype_id","name"]
+const headersDevices = ["id","module_id","uuid","address","poll_rate"]
+const headersDevicetypes = ["id","name"]
+const headersModules = ["id","module_device_type_id","mac"]
+*/
  export function tableHeaders(headerLabels: string[]){
     return (
             <TableRow key="1">
@@ -36,19 +44,27 @@ const headersProtocols = ["name","protocol"]
 
 
 interface DatapointsData {
-    "name": string,
+    "id": string,
+    "module_device_type_id": string,
+    "name":string,
     "units": string,
-    "datapoint_code":string,
+    "code": string,
     "legend": string,
-    "writable": boolean,
-    "id": string
+    "writable": boolean
 }
 
-export function tableDatapoints(data: any){
+export function tableDatapoints(data: DatapointsData[]){
+    console.log("Datapoints table")
     return (
         <TableBody>
             {data.map(row =>
                 <TableRow key={row.id}>
+                    <TableCell>
+                        {row.id}
+                    </TableCell>
+                    <TableCell>
+                        {row.module_device_type_id}
+                    </TableCell>
                     <TableCell>
                         {row.name}
                     </TableCell>
@@ -56,7 +72,7 @@ export function tableDatapoints(data: any){
                         {row.units}
                     </TableCell>
                     <TableCell>
-                        {row.datapoint_code}
+                        {row.code}
                     </TableCell>
                     <TableCell>
                         {row.legend}
@@ -64,8 +80,31 @@ export function tableDatapoints(data: any){
                     <TableCell>
                         {row.writable}
                     </TableCell>
+                </TableRow>
+            )}
+        </TableBody>
+    );
+};
+
+interface ProtocolsData {
+    "id": string,
+    "datatype_id": string,
+    "name":string,
+}
+
+export function tableProtocols(data: ProtocolsData[]){
+    return (
+        <TableBody>
+            {data.map(row =>
+                <TableRow key={row.id}>
                     <TableCell>
                         {row.id}
+                    </TableCell>
+                    <TableCell>
+                        {row.datatype_id}
+                    </TableCell>
+                    <TableCell>
+                        {row.name}
                     </TableCell>
                 </TableRow>
             )}
@@ -73,7 +112,125 @@ export function tableDatapoints(data: any){
     );
 };
 
-export class Tables extends Component<{},{datapointsData: any, datapointsIsLoaded: boolean}> {
+interface DevicesData {
+    "id": string,
+    "module_id": string,
+    "uuid":string,
+    "address": string,
+    "poll_rate": string
+}
+
+export function tableDevices(data: DevicesData[]){
+    console.log(data)
+    return (
+        <TableBody>
+            {data.map(row =>
+                <TableRow key={row.id}>
+                    <TableCell>
+                        {row.id}
+                    </TableCell>
+                    <TableCell>
+                        {row.module_id}
+                    </TableCell>
+                    <TableCell>
+                        {row.uuid}
+                    </TableCell>
+                    <TableCell>
+                        {row.address}
+                    </TableCell>
+                    <TableCell>
+                        {row.poll_rate}
+                    </TableCell>
+                </TableRow>
+            )}
+        </TableBody>
+    );
+};
+
+interface DevicetypesData {
+    "id": string,
+    "protocol_id": string,
+    "manufacturer":string,
+    "model": string,
+    "code": string
+}
+
+export function tableDevicetypes(data: DevicetypesData[]){
+    console.log(data)
+    return (
+        <TableBody>
+            {data.map(row =>
+                <TableRow key={row.id}>
+                    <TableCell>
+                        {row.id}
+                    </TableCell>
+                    <TableCell>
+                        {row.protocol_id}
+                    </TableCell>
+                    <TableCell>
+                        {row.manufacturer}
+                    </TableCell>
+                    <TableCell>
+                        {row.model}
+                    </TableCell>
+                    <TableCell>
+                        {row.code}
+                    </TableCell>
+                </TableRow>
+            )}
+        </TableBody>
+    );
+};
+
+interface DatatypesData {
+    "id": string,
+    "name":string,
+}
+
+export function tableDatatypes(data: DatatypesData[]){
+    return (
+        <TableBody>
+            {data.map(row =>
+                <TableRow key={row.id}>
+                    <TableCell>
+                        {row.id}
+                    </TableCell>
+                    <TableCell>
+                        {row.name}
+                    </TableCell>
+                </TableRow>
+            )}
+        </TableBody>
+    );
+};
+
+interface ModulesData {
+    "id": string,
+    "module_device_type_id": string,
+    "mac":string,
+}
+
+export function tableModules(data: ModulesData[]){
+    return (
+        <TableBody>
+            {data.map(row =>
+                <TableRow key={row.id}>
+                    <TableCell>
+                        {row.id}
+                    </TableCell>
+                    <TableCell>
+                        {row.module_device_type_id}
+                    </TableCell>
+                    <TableCell>
+                        {row.mac}
+                    </TableCell>
+                </TableRow>
+            )}
+        </TableBody>
+    );
+};
+
+export class Tables extends React.Component<{classes},{datapointsData: any, datapointsIsLoaded: boolean}> {
     buttonType = "default button";
 
     constructor(props){
@@ -92,23 +249,25 @@ export class Tables extends Component<{},{datapointsData: any, datapointsIsLoade
                    this.setState({
                         datapointsData: jsonData,
                         datapointsIsLoaded: true
-                   }) 
+                   })
                    console.log(this.state)
-                }) 
+                })
                 .catch((error) => {
-                    console.log("Unable to get data")
                     console.log(error)
+                    console.log("Unable to get data")
                 })
         );
     }
 
-    ButtonNavigate = (props: { name: string }) =>  {
+    // todo: tuto mozes robit svoje tabulky, state moze mat iba
+    render() {
+        const { classes } = this.props;
         return (
             <div>
                 <BottomNavigation
                     //value={value}
                     onChange={(event, newValue) => {
-                        this.buttonType = "test"//newValue.split('/')[5];
+                        this.buttonType = newValue.split('/')[6];
                         this.setState({
                             datapointsIsLoaded: false
                         })
@@ -116,40 +275,102 @@ export class Tables extends Component<{},{datapointsData: any, datapointsIsLoade
                     }}
                     showLabels
                 >
-                    <BottomNavigationAction key="1" label="Datapoints" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/datapoints' icon={<FolderIcon />} />
-                    <BottomNavigationAction key="2" label="Protocol" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/protocols' icon={<FolderIcon />} />
-                    <BottomNavigationAction key="3" label="Device" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/devices' icon={<FolderIcon />} />
-                    <BottomNavigationAction key="4" label="Modules" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/modules' icon={<FolderIcon />} />
-                    <BottomNavigationAction key="5" label="Device Type" value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/devicetypes' icon={<FolderIcon />} />
-
-                    </BottomNavigation>
-            </div>
-        );
-
-    }
-    // todo: tuto mozes robit svoje tabulky, state moze mat iba
-    render() {
-        return (
-            <div>
-                <this.ButtonNavigate name={"Buttons"} />
-                
-                        {this.state.datapointsIsLoaded &&
+                    <BottomNavigationAction
+                        key="1" label="Datapoints"  icon={<FolderIcon />}
+                        classes={{
+                            root: classes.actionItem,
+                            selected: classes.selected
+                          }}
+                        value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/datapoints'
+                        />
+                    <BottomNavigationAction key="2" label="Protocol"  icon={<FolderIcon />}
+                        classes={{
+                            root: classes.actionItem,
+                            selected: classes.selected
+                          }}
+                          value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/protocols'
+                          />
+                    <BottomNavigationAction key="3" label="Device" icon={<FolderIcon />}
+                        classes={{
+                            root: classes.actionItem,
+                            selected: classes.selected
+                        }}
+                        value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/devices'
+                    />
+                    <BottomNavigationAction key="5" label="Device Type" icon={<FolderIcon />}
+                        classes={{
+                            root: classes.actionItem,
+                            selected: classes.selected
+                        }}
+                    value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/devicetypes'
+                    />
+                    <BottomNavigationAction key="5" label="Data Type" icon={<FolderIcon />}
+                        classes={{
+                            root: classes.actionItem,
+                            selected: classes.selected
+                        }}
+                        value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/datatypes'
+                    />
+                    <BottomNavigationAction key="4" label="Modules" icon={<FolderIcon />}
+                        classes={{
+                            root: classes.actionItem,
+                            selected: classes.selected
+                        }}
+                        value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/modules'
+                    />
+                </BottomNavigation>
+                {this.state.datapointsIsLoaded && this.buttonType == 'datapoints' &&
                     <Table>
-                    <TableHead> 
-                        {tableHeaders(headersDatapoints)}    
-                    </TableHead>
-                    {tableDatapoints(this.state.datapointsData)}
-                </Table>
-                            }
+                        <TableHead>
+                            {tableHeaders(headers[this.buttonType])}   
+                        </TableHead>
+                        {tableDatapoints(this.state.datapointsData)}
+                    </Table>
+                }
+                {this.state.datapointsIsLoaded && this.buttonType == 'protocols' &&
+                    <Table>
+                        <TableHead>
+                            {tableHeaders(headers[this.buttonType])}   
+                        </TableHead>
+                        {tableProtocols(this.state.datapointsData)}
+                    </Table>
+                }
+                {this.state.datapointsIsLoaded && this.buttonType == 'devices' &&
+                    <Table>
+                        <TableHead>
+                            {tableHeaders(headers[this.buttonType])}   
+                        </TableHead>
+                        {tableDevices(this.state.datapointsData)}
+                    </Table>
+                }
+                {this.state.datapointsIsLoaded && this.buttonType == 'devicetypes' &&
+                    <Table>
+                        <TableHead>
+                            {tableHeaders(headers[this.buttonType])}   
+                        </TableHead>
+                        {tableDevicetypes(this.state.datapointsData)}
+                    </Table>
+                }
+                {this.state.datapointsIsLoaded && this.buttonType == 'datatypes' &&
+                    <Table>
+                        <TableHead>
+                            {tableHeaders(headers[this.buttonType])}   
+                        </TableHead>
+                        {tableDatatypes(this.state.datapointsData)}
+                    </Table>
+                }
+                {this.state.datapointsIsLoaded && this.buttonType == 'modules' &&
+                    <Table>
+                        <TableHead>
+                            {tableHeaders(headers[this.buttonType])}   
+                        </TableHead>
+                        {tableModules(this.state.datapointsData)}
+                    </Table>
+                }
             </div>
         );
 
     }
 };
 
-/*
-                <Table>
-                    {tableHeaders(headersProtocols)}
-                </Table>
-*/
-export default Tables;
+export default withStyles(tablesClasses)(Tables);
