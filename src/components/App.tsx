@@ -11,6 +11,8 @@ import {
 } from "react-router-dom";
 import Scada from "./Scada";
 import Divider from "@material-ui/core/Divider";
+import Recipe from './Recipe';
+
 
 const drawerWidth = 240;
 
@@ -71,6 +73,11 @@ export default class App extends Component{
 											> 
 												<Dashboard />
 											</Route>
+											<Route 
+												path="/recipe"
+											>
+												<Recipe />
+											</Route>	
 										</div>
 									</Switch>
 								</div>
