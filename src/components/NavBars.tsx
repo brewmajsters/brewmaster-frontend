@@ -76,6 +76,11 @@ export class LeftBar extends Component {
 						name="Dashboard"
 						icon="dashboard"
 					/>
+					<LeftBarItem
+						path="/recipe"
+						name="Recept maker"
+						icon="dashboard"
+					/>
 				</List>
 				<Divider />
 			</div>
