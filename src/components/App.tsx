@@ -12,7 +12,7 @@ import {
 import Scada from "./Scada";
 import Divider from "@material-ui/core/Divider";
 import Recipe from './Recipe';
-
+import WebSocket from './websocket';
 
 const drawerWidth = 240;
 
