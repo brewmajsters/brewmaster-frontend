@@ -4,33 +4,31 @@ import socketIOClient from "socket.io-client";
 import { render } from 'react-dom';
 
 
-const ENDPOINT = "http://127.0.0.1:5000/web_socket";
+const HOST = process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT;
 
 
-export default class WebSocket extends React.Component <{onData: any},{}> {
+export default class WebSocket extends React.Component <{onData: any,id: any, moduleId: any},{}> {
 
     onData: any;
+    id: any;
+    moduleId: any;
 
     constructor(props){
         super(props);
-        this.onData = props.onData
-    }
+        this.onData = props.onData;
+        this.id = props.id;
+        this.moduleId = props.moduleId;
 
-    componentDidMount(){
-        let socket = socketIOClient(ENDPOINT);
-        socket.on("C9:65:6E:EA:B0:8B", data => {
-        console.log(data);
-        console.log(data['values']['4fb9edf8-aa3c-4a04-8afe-6d601309999d']['value']);
-        this.onData(data['values']['4fb9edf8-aa3c-4a04-8afe-6d601309999d']['value']);
-        });
-      
+        let socket = socketIOClient(HOST+"/web_socket");
+        socket.on(this.moduleId, data => {
+//          console.log(this.id, data.values[this.id].value)
+          this.onData(data.values[this.id].value);  
+        })
     }
 
     render(){
       return (
-        <p>
-          It's
-        </p>
+        <div></div>
       );
     }
 }
