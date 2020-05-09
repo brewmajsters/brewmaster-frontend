@@ -18,10 +18,7 @@ export default function getClasses() {
                 padding: 10,
             },
             drawerPaper: {
-                marginTop: 50,
-                width: 300,
-                padding: 10,
-                zIndex: 1,
+                marginTop: 25,
             },
             content: {
                 flexGrow: '1',

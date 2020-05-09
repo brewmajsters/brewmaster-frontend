@@ -19,6 +19,7 @@ import {
 import getClasses from '../styles/navbars_style';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 const classes = getClasses();
 
@@ -44,25 +45,16 @@ export function TopBar() {
 const LeftBarItem = (props: { path: string, name: string, image: string }) => {
 
 	return (
-		<Link
-			to={props.path}
-		>
-			<Grid
-				item	
+
+		<ListItem
+			button
 			>
-				<img 
-					src={props.image} 
-					style={classes.leftBarTile}
-				/>
-				<Typography
-					variant="h5"
-					>
-						{props.name}
-				</Typography>
-				<Divider/>
-			</Grid>
-		</Link>
-	);
+
+				<Link to={props.path}>
+					<ListItemText primary={props.name}/>
+				</Link>
+			</ListItem>
+		);
 }
 
 
@@ -71,12 +63,10 @@ export class LeftBar extends Component {
 
 	render() {
 		return (
-			<div>
-				<Grid
-					container
-					spacing={5}
-					style={classes.gridList}	
-				>
+			<div
+				style={classes.drawerPaper}
+			>
+				<li>
 					<LeftBarItem
 						path="/"
 						name="Scada"
@@ -93,7 +83,7 @@ export class LeftBar extends Component {
 						name="Recept maker"
 						image="/public/dashboardIcon.png"
 					/>
-				</Grid>
+					</li>
 				<Divider />
 			</div>
 		);
