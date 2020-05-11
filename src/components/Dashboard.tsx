@@ -1,8 +1,9 @@
 import React = require('react');
 import {Line} from 'react-chartjs-2';
 import Grid from '@material-ui/core/Grid';
-import {Typography} from "@material-ui/core";
+import {Typography, InputLabel, Divider} from "@material-ui/core";
 import Card from "@material-ui/core/Card";
+import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from "@material-ui/core/CardContent";
 import ReactApexChart from "react-apexcharts";
 // @ts-ignore
@@ -12,7 +13,7 @@ import getClasses from '../styles/dashboard_style';
 import { render } from 'react-dom';
 import TextField from '@material-ui/core/TextField';;
 import Button from '@material-ui/core/Button';
-
+import Select from '@material-ui/core/Select';
 const classes = getClasses();
 const HOST = process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT;
 const DATA_INIT = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
@@ -33,7 +34,7 @@ function desiredValueArray(value){
     return arr; 
 }
 
-export class Chart extends React.Component < {name: string, deviceId: any, moduleId: any},{}> { 
+export class Chart extends React.Component < {datapoint: any, deviceId: any,  deviceUuid: any, moduleId: any},{}> { 
 
         state = {
             data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -57,7 +58,7 @@ export class Chart extends React.Component < {name: string, deviceId: any, modul
         data = {
             labels: this.time,
             datasets: [{
-                label: 'Values from device',
+                label: 'Values in ' + this.props.datapoint.units,
                 fill: false,
                 lineTension: 0.1,
                 backgroundColor: 'rgba(75,192,192,0.4)',
@@ -99,10 +100,26 @@ export class Chart extends React.Component < {name: string, deviceId: any, modul
             }]
         }
 
+    onData = (value) => {
+        var data = this.state.data;
+        data.shift();
+        data.push(value);
+
+       var desiredArray = this.state.desiredValueArray;
+       desiredArray.shift();
+       desiredArray.push(this.state.desiredValue);
+        console.log(value);
+        this.setState({
+            data: data,
+            desiredValueArray: desiredArray
+        });
+        }
+
+
     onSubmit = () => {
         var data = {};
         data["device_id"] = this.props.deviceId;
-        data["data_point"] = "none";
+        data["datapoint"] = this.props.datapoint.code;
         data["value"] = this.state.textInput;
         fetch("http://" + HOST +"/modules/"+ String(this.props.moduleId + "/set_value") , {
             method: 'POST', 
@@ -115,20 +132,7 @@ export class Chart extends React.Component < {name: string, deviceId: any, modul
         }).catch(err=>{console.log(err)});
     }
 
-    onData = (value) => {
-        var data = this.state.data;
-        data.shift();
-        data.push(value);
-        var desiredArray = this.state.desiredValueArray;
-        desiredArray.shift();
-        desiredArray.push(this.state.desiredValue);
-        console.log(this.props.deviceId, value);
-        this.setState({
-            data: data,
-            desiredValueArray: desiredArray
-        })
-   //     this.chart.update();
-        }  
+     
     handleChange = (event) => {
         this.setState({
             textInput: event.target.value
@@ -148,11 +152,18 @@ export class Chart extends React.Component < {name: string, deviceId: any, modul
     
         return (
             <Card>
+
+                    <WebSocket onData={this.onData} moduleId={this.props.moduleId} deviceId={this.props.deviceId} datapointCode={this.props.datapoint.code} />
                     <CardContent>
                         <Typography
                             variant={"h5"}
                         >
-                            {this.props.name}
+                            {this.props.datapoint.name}
+                        </Typography>
+<Typography
+                            variant={"h6"}
+                        >
+                            {this.props.deviceUuid}
                         </Typography>
                     </CardContent>
                     <Line
@@ -164,8 +175,7 @@ export class Chart extends React.Component < {name: string, deviceId: any, modul
                         <TextField id={this.props.deviceId} label="Desired Value" onChange={this.handleChange}/>    
                         <Button onClick={this.onSubmit}> Submit! </Button>
                     </form>
-                    <WebSocket onData={this.onData} id={this.props.deviceId} moduleId={this.props.moduleId} />
-            </Card>
+                                </Card>
         );
     }
 }
@@ -175,7 +185,10 @@ export default class Dashboard extends React.Component{
     state = {
         devices: [],
         modules: [],
-        isLoaded: false
+        datapoints: [],
+        filter: "Disabled",
+        isLoaded: false,
+        data: {}
     }
     data: any;
 
@@ -184,35 +197,100 @@ export default class Dashboard extends React.Component{
         this.data = {};
     }
 
+
+    selectHandle = (event) => {
+        this.setState({
+            filter: event.target.value});
+    }
+
     componentDidMount(){
         fetch("http://"+HOST+"/devices")
           .then(response => response.json())
           .then(data => {
             console.log(data);
+            
+            var datapoints = []
+            var device_data = {}
+            data.forEach(device => {
+                device_data[device.id]={}
+            
+                 device.datapoints.forEach(datapoint => {
+                    var current_datapoint ={
+                        code: datapoint.code,
+                        name: datapoint.name,
+                        units: datapoint.units
+                    }
+
+                    if (datapoints.some(e => e.code === current_datapoint.code)) {
+                        }
+                    else 
+                        datapoints.push(current_datapoint);
+                 })
+
+                 
+             });
             this.setState({
               devices: data,
               isLoaded: true,
+              datapoints: datapoints,
              });
              console.log(this.state)
         })
     }
 
+    renderFilter(datapoints: any[]){
+        return(
+            <Card>
+                <CardContent>
+                    <Typography 
+                        variant="h5"
+                    >
+                        Device filter:
+                    </Typography>
+                    <Divider/>
+                    <br/>
+                    <InputLabel>Data Point:</InputLabel>
+                    <Select
+                        native
+                        value={this.state.filter}
+                        onChange = {this.selectHandle}
+                        
+                    >
+
+                        <option value="Disabled"> Disable filter </option>
+                        {datapoints.map((datapoint, i )=>{
+                            return (
+                                <option value={datapoint.code}> {datapoint.name} ({datapoint.code}) [{datapoint.units}] </option>
+                            )
+                        } )}
+                    </Select>
+                </CardContent>
+            </Card>
+        );
+    }
+
 //    chart = <Chart name={"Teplota"} data={this.state.data1}/>
 
     renderCharts(devices: any){
-        console.log(devices);
         return(
                  devices.map((device,i )=> {
-                     return (
-                        <Grid
-                            item
-                            xs={6}
-                            key={i}
-                        >
-                            <Chart key={i} name={device.id} deviceId={device.id} moduleId={device.module_id} />
-                        </Grid>
-                     )
-                    })
+                         return (
+                                device.datapoints.map((datapoint, i) => {
+                                    return(
+                                    <Grid
+                                        item
+                                        xs={6}
+                                    >
+                                        <Chart key={i} 
+                                            datapoint={datapoint} 
+                                            deviceUuid={device.uuid} 
+                                            deviceId={device.id} 
+                                            moduleId={device.module_id}/>
+                                    </Grid>
+                                )})
+                         )}
+                    )
+
         )
     }   
     
@@ -226,26 +304,18 @@ export default class Dashboard extends React.Component{
                 {this.state.isLoaded == true && 
                <Grid 
                 container
-                spacing={3}
-            > 
-               {this.renderCharts(this.state.devices)} 
-                <Grid 
-                    item
-                    xs={6}
-                >
-                    <Card
-                        style={classes.alert}
-                    >
-                        <CardContent>
-                            <Typography
-                                variant={"h5"}
-                            >
-                                Tlak
-                            </Typography>
-                        </CardContent>
-                    </Card>
+                spacing={4}
+            >
+                
+                        <Grid
+                            item
+                            xs={12}
+                        >
+                            {this.renderFilter(this.state.datapoints)}
+                        </Grid>
+                       
+                   {this.renderCharts(this.state.devices)} 
                 </Grid>
-            </Grid>
                 }
                 </div>
         );
