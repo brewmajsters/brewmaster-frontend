@@ -207,31 +207,32 @@ export default class Dashboard extends React.Component{
         fetch("http://"+HOST+"/devices")
           .then(response => response.json())
           .then(data => {
-            var datapoints = []
-            var device_data = {}
-            data.forEach(device => {
-                device_data[device.id]={}
-            
-                 device.datapoints.forEach(datapoint => {
-                    var current_datapoint ={
-                        code: datapoint.code,
-                        name: datapoint.name,
-                        units: datapoint.units
-                    }
+              var datapoints = []
+              var device_data = {}
+              data.forEach(device => {
+                  device_data[device.id] = {}
 
-                    if (datapoints.some(e => e.code === current_datapoint.code)) {
-                        }
-                    else 
+                  device.datapoints.forEach(datapoint => {
+                      var current_datapoint = {
+                          code: datapoint.code,
+                          name: datapoint.name,
+                          units: datapoint.units
+                      }
+                      if (datapoints.some(dp => dp.code === datapoint.code)){
+
+                      }
+                      else 
                         datapoints.push(current_datapoint);
-                 })
+                  })
+                   
+              });
 
-                 
-             });
-            this.setState({
-              devices: data,
-              isLoaded: true,
-              datapoints: datapoints,
-             });
+
+              this.setState({
+                  devices: data,
+                  isLoaded: true,
+                  datapoints: datapoints,
+              });
         })
     }
      
@@ -296,57 +297,61 @@ handleChangePollRate = (id,event) => {
 
 //    chart = <Chart name={"Teplota"} data={this.state.data1}/>
 
-    renderCharts(devices: any){
-        return(
+    renderCharts(devices: any) {
+        return (
             devices.map((device, i) => {
-                return (
-                    <Grid
-                        item
-                        xs={12}
-                        key={i}
-                    >
+                if (device.datapoints.some(datapoint => datapoint.code === this.state.filter) || this.state.filter === "Disabled") {
+                    return (
 
-                        <Card>
-                            <CardHeader
-                            title={"Device: " + device.uuid}
-                            />
-                            <CardContent>
-                                <Grid
-                                    container
-                                    spacing={3}
-                                >
-                                    {device.datapoints.map((datapoint, i) => {
-                                        return (
-                                            <Grid
-                                                item
-                                                xs={6}
-                                            >
-                                                <Chart key={i}
-                                                    datapoint={datapoint}
-                                                    deviceUuid={device.uuid}
-                                                    deviceId={device.id}
-                                                    moduleId={device.module_id}
-                                                    deviceAddress={device.address}
-                                                />
-                                            </Grid>
-                                        )
-                                    })
-                                    }
-                                </Grid>
-                                <br/>
-                                <Divider/>
+                        <Grid
+                            item
+                            xs={12}
+                            key={i}
+                        >
 
-                        <form>
-                            <TextField id={"inputPollRate_"+i} label="Poll Rate" onChange={this.handleChangePollRate.bind(this,i)}/>   
-                             <br/>
-                            <Button onClick={this.onSubmitPollRate.bind(this, device.id, device.address, device.module_id, i)} color={"primary"}> Submit! </Button>
-                        </form>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                )
-            }
+                            <Card>
+                                <CardHeader
+                                    title={"Device: " + device.uuid}
+                                />
+                                <CardContent>
+                                    <Grid
+                                        container
+                                        spacing={3}
+                                    >
+                                        {device.datapoints.map((datapoint, i) => {
+                                            return (
+                                                <Grid
+                                                    item
+                                                    xs={6}
+                                                >
+                                                    <Chart key={i}
+                                                        datapoint={datapoint}
+                                                        deviceUuid={device.uuid}
+                                                        deviceId={device.id}
+                                                        moduleId={device.module_id}
+                                                        deviceAddress={device.address}
+                                                    />
+                                                </Grid>
+                                            )
+                                        })
+                                        }
+                                    </Grid>
+                                    <br />
+                                    <Divider />
+
+                                    <form>
+                                        <TextField id={"inputPollRate_" + i} label="Poll Rate" onChange={this.handleChangePollRate.bind(this, i)} />
+                                        <br />
+                                        <Button onClick={this.onSubmitPollRate.bind(this, device.id, device.address, device.module_id, i)} color={"primary"}> Submit! </Button>
+                                    </form>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+
                     )
+                }
+            }
+            )
 
         )
     }   
