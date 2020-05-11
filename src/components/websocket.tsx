@@ -7,23 +7,25 @@ import { render } from 'react-dom';
 const HOST = process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT;
 
 
-export default class WebSocket extends React.Component <{onData: any,id: any, moduleId: any},{}> {
+export default class WebSocket extends React.Component <{onData: any, moduleId: any, deviceId: any, datapointCode: any},{}> {
 
     onData: any;
-    id: any;
     moduleId: any;
 
     constructor(props){
         super(props);
         this.onData = props.onData;
-        this.id = props.id;
         this.moduleId = props.moduleId;
+
 
         let socket = socketIOClient(HOST+"/web_socket");
         socket.on(this.moduleId, data => {
-//          console.log(this.id, data.values[this.id].value)
-          this.onData(data.values[this.id].value);  
-        })
+            if (data.values.hasOwnProperty(this.props.deviceId) && data.values[this.props.deviceId].hasOwnProperty(this.props.datapointCode)){
+
+                this.onData(data.values[this.props.deviceId][this.props.datapointCode]);
+            }
+        });
+
     }
 
     render(){
