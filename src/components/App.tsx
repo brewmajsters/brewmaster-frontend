@@ -10,9 +10,6 @@ import {
 	Link
 } from "react-router-dom";
 import Scada from "./Scada";
-import Divider from "@material-ui/core/Divider";
-import Recipe from './Recipe';
-import WebSocket from './websocket';
 
 const drawerWidth = 240;
 
@@ -38,7 +35,7 @@ export default class App extends Component{
 					<div style={classes.body}>
 						<Grid 
 							container 
-							spacing={2}
+							spacing={7}
 						>
 							<Grid 
 								item
@@ -53,10 +50,9 @@ export default class App extends Component{
 							>
 								<LeftBar/>
 							</Grid> 
-							<Divider orientation="vertical"/>
 							<Grid 
 								item
-								xs={9}
+								xs={10}
 							>
 								<div 
 									style={classes.main}
@@ -73,11 +69,6 @@ export default class App extends Component{
 											> 
 												<Dashboard />
 											</Route>
-											<Route 
-												path="/recipe"
-											>
-												<Recipe />
-											</Route>	
 										</div>
 									</Switch>
 								</div>

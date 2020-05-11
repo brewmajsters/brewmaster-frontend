@@ -1,5 +1,5 @@
 import React = require('react');
-import { Component } from 'react';
+import {Component} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
@@ -17,74 +17,66 @@ import {
 	Link
 } from "react-router-dom";
 import getClasses from '../styles/navbars_style';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+
 
 const classes = getClasses();
 
 const drawerWidth = 240;
 
-const dashboard = DashboardIcon;
 
 
-export function TopBar() {
+export function TopBar(){
 	return (
-		<AppBar position="fixed" style={classes.appBar}>
-			<Toolbar>
-				<Typography variant="h4" color={"inherit"} noWrap>
-					<LocalDrinkIcon /> Smartbrew - Brewmasters
+			<AppBar  position="fixed" style={classes.appBar}>
+				<Toolbar>
+					<Typography variant="h4" color={"inherit"} noWrap>
+						<LocalDrinkIcon/> Smartbrew - Brewmasters
 					</Typography>
-			</Toolbar>
-		</AppBar>
-
+				</Toolbar>
+			</AppBar>
+			
 	);
 }
 
+export class LeftBar extends Component{
+	
+	
+	render(){
+		return(
+			<div>
+				<List>
+					<Link 
+						to="/"
+					> 
+						<ListItem 
+							button
+						>
+							<ListItemIcon>
+								<DashboardIcon/> 
+							</ListItemIcon>
+							<ListItemText
+								primary="Scada"
+							/> 
+						</ListItem>
+					</Link>
 
-const LeftBarItem = (props: { path: string, name: string, image: string }) => {
-
-	return (
-
-		<ListItem
-			button
-			>
-
-				<Link to={props.path}>
-					<ListItemText primary={props.name}/>
-				</Link>
-			</ListItem>
-		);
-}
-
-
-export class LeftBar extends Component {
-
-
-	render() {
-		return (
-			<div
-				style={classes.drawerPaper}
-			>
-				<li>
-					<LeftBarItem
-						path="/"
-						name="Scada"
-						image="/public/scadaIcon.png"
-					/>
-					<LeftBarItem
-						path="/dashboard"
-						name="Dashboard"
-						image="/public/dashboardIcon.png"
-					/>
-			
-					<LeftBarItem
-						path="/recipe"
-						name="Recept maker"
-						image="/public/dashboardIcon.png"
-					/>
-					</li>
-				<Divider />
+					<Link 
+						to="/dashboard"
+					> 
+						<ListItem 
+							button 
+							key="Dashboard"
+						>  
+							<ListItemIcon>
+								<DashboardIcon/> 
+							</ListItemIcon>
+							<ListItemText
+								primary="Dashboard"
+							/> 
+						</ListItem>
+					</Link>
+				</List>
+				<Divider/>
 			</div>
 		);
 	}
