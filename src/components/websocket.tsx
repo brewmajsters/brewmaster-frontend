@@ -20,8 +20,6 @@ export default class WebSocket extends React.Component <{onData: any, moduleId: 
 
         let socket = socketIOClient(HOST+"/web_socket");
         socket.on(this.moduleId, data => {
-//          console.log(this.id, data.values[this.id].value)
-            console.log(data.values);
             if (data.values.hasOwnProperty(this.props.deviceId) && data.values[this.props.deviceId].hasOwnProperty(this.props.datapointCode)){
 
                 this.onData(data.values[this.props.deviceId][this.props.datapointCode]);

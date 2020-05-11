@@ -34,14 +34,16 @@ function desiredValueArray(value){
     return arr; 
 }
 
-export class Chart extends React.Component < {datapoint: any, deviceId: any,  deviceUuid: any, moduleId: any},{}> { 
+export class Chart extends React.Component < {datapoint: any, deviceId: any,  deviceUuid: any, moduleId: any, deviceAddress: any},{}> { 
 
         state = {
             data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             desiredValueArray: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             isControled: false,
             desiredValue: 0,
-            textInput: 0
+            inputDesiredValue: 0,
+            inputPollRate: 0
+
         }
 
         time = time(-60,0);
@@ -108,7 +110,6 @@ export class Chart extends React.Component < {datapoint: any, deviceId: any,  de
        var desiredArray = this.state.desiredValueArray;
        desiredArray.shift();
        desiredArray.push(this.state.desiredValue);
-        console.log(value);
         this.setState({
             data: data,
             desiredValueArray: desiredArray
@@ -116,29 +117,28 @@ export class Chart extends React.Component < {datapoint: any, deviceId: any,  de
         }
 
 
-    onSubmit = () => {
+    onSubmitDesiredValue = () => {
         var data = {};
         data["device_id"] = this.props.deviceId;
         data["datapoint"] = this.props.datapoint.code;
-        data["value"] = this.state.textInput;
+        data["value"] = this.state.inputDesiredValue;
         fetch("http://" + HOST +"/modules/"+ String(this.props.moduleId + "/set_value") , {
             method: 'POST', 
             headers:{'Content-Type': 'application/json'}, 
             body: JSON.stringify(data)
         }).then(res => {
             this.setState({
-                desiredValue: this.state.textInput
+                desiredValue: this.state.inputDesiredValue
             })
         }).catch(err=>{console.log(err)});
     }
 
-     
-    handleChange = (event) => {
+
+    handleChangeDesiredValue = (event) => {
         this.setState({
-            textInput: event.target.value
+            inputDesiredValue: event.target.value
         })
     }
-
     //handleOpen = () => {
     //    setOpen(true);
     //};
@@ -154,27 +154,26 @@ export class Chart extends React.Component < {datapoint: any, deviceId: any,  de
             <Card>
 
                     <WebSocket onData={this.onData} moduleId={this.props.moduleId} deviceId={this.props.deviceId} datapointCode={this.props.datapoint.code} />
+                    
                     <CardContent>
                         <Typography
                             variant={"h5"}
                         >
                             {this.props.datapoint.name}
                         </Typography>
-<Typography
-                            variant={"h6"}
-                        >
-                            {this.props.deviceUuid}
-                        </Typography>
+                    <form>
+                        <TextField id={this.props.deviceId} label="Desired Value" onChange={this.handleChangeDesiredValue}/>    
+                        <br/>
+                        <Button onClick={this.onSubmitDesiredValue}> Submit! </Button>
+                    </form>
                     </CardContent>
                     <Line
                         data={this.data}
                         key={Math.random()}
                         options={this.options}
                     />
-                    <form>
-                        <TextField id={this.props.deviceId} label="Desired Value" onChange={this.handleChange}/>    
-                        <Button onClick={this.onSubmit}> Submit! </Button>
-                    </form>
+                    
+                    
                                 </Card>
         );
     }
@@ -188,7 +187,8 @@ export default class Dashboard extends React.Component{
         datapoints: [],
         filter: "Disabled",
         isLoaded: false,
-        data: {}
+        data: {},
+        inputsPollRate: []
     }
     data: any;
 
@@ -207,8 +207,6 @@ export default class Dashboard extends React.Component{
         fetch("http://"+HOST+"/devices")
           .then(response => response.json())
           .then(data => {
-            console.log(data);
-            
             var datapoints = []
             var device_data = {}
             data.forEach(device => {
@@ -234,9 +232,36 @@ export default class Dashboard extends React.Component{
               isLoaded: true,
               datapoints: datapoints,
              });
-             console.log(this.state)
         })
     }
+     
+    onSubmitPollRate = (deviceId, deviceAddress, moduleId, id) => {
+         event.preventDefault()
+        console.log(id,this.state.inputsPollRate) 
+        var data = {
+        "device_id": deviceId,
+        "address": deviceAddress,
+        "poll_rate": this.state.inputsPollRate[id]
+        }
+
+        fetch("http://" + HOST +"/modules/"+ String(moduleId + "/config") , {
+            method: 'POST', 
+            headers:{'Content-Type': 'application/json'}, 
+            body: JSON.stringify(data)
+        }).then(res => {
+        }).catch(err=>{console.log(err)});
+    }
+
+
+handleChangePollRate = (id,event) => {
+        var newPollRate = this.state.inputsPollRate;
+        newPollRate[id] = event.target.value;
+        this.setState({
+            inputsPollRate: newPollRate 
+        })
+        console.log(id,this.state.inputsPollRate[id])
+    }
+
 
     renderFilter(datapoints: any[]){
         return(
@@ -273,22 +298,54 @@ export default class Dashboard extends React.Component{
 
     renderCharts(devices: any){
         return(
-                 devices.map((device,i )=> {
-                         return (
-                                device.datapoints.map((datapoint, i) => {
-                                    return(
-                                    <Grid
-                                        item
-                                        xs={6}
-                                    >
-                                        <Chart key={i} 
-                                            datapoint={datapoint} 
-                                            deviceUuid={device.uuid} 
-                                            deviceId={device.id} 
-                                            moduleId={device.module_id}/>
-                                    </Grid>
-                                )})
-                         )}
+            devices.map((device, i) => {
+                return (
+                    <Grid
+                        item
+                        xs={12}
+                        key={i}
+                    >
+
+                        <Card>
+                            <CardHeader
+                            title={"Device: " + device.uuid}
+                            />
+                            <CardContent>
+                                <Grid
+                                    container
+                                    spacing={3}
+                                >
+                                    {device.datapoints.map((datapoint, i) => {
+                                        return (
+                                            <Grid
+                                                item
+                                                xs={6}
+                                            >
+                                                <Chart key={i}
+                                                    datapoint={datapoint}
+                                                    deviceUuid={device.uuid}
+                                                    deviceId={device.id}
+                                                    moduleId={device.module_id}
+                                                    deviceAddress={device.address}
+                                                />
+                                            </Grid>
+                                        )
+                                    })
+                                    }
+                                </Grid>
+                                <br/>
+                                <Divider/>
+
+                        <form>
+                            <TextField id={"inputPollRate_"+i} label="Poll Rate" onChange={this.handleChangePollRate.bind(this,i)}/>   
+                             <br/>
+                            <Button onClick={this.onSubmitPollRate.bind(this, device.id, device.address, device.module_id, i)} color={"primary"}> Submit! </Button>
+                        </form>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                )
+            }
                     )
 
         )
@@ -304,7 +361,7 @@ export default class Dashboard extends React.Component{
                 {this.state.isLoaded == true && 
                <Grid 
                 container
-                spacing={4}
+                spacing={2}
             >
                 
                         <Grid
