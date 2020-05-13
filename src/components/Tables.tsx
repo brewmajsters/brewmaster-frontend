@@ -14,8 +14,10 @@ import Paper from '@material-ui/core/Paper';
 import { keys } from "@material-ui/core/styles/createBreakpoints";
 import { withStyles } from "@material-ui/core/styles";
 
-const tablesClasses = getClasses();
 
+const tablesClasses = getClasses();
+const HOST = process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT; 
+//const HOST = "localhost:5000";
 const headers = {'datapoints' : ["id", "module_device_type_id", "name", "units", "code","legend","writable"],
                  'protocols' : ["id","datatype_id","name"],
                  'devices' : ["id","module_id","uuid","address","poll_rate"],
@@ -259,7 +261,7 @@ export class Tables extends React.Component<{classes},{datapointsData: any, data
         );
     }
 
-    // todo: tuto mozes robit svoje tabulky, state moze mat iba
+ 
     render() {
         const { classes } = this.props;
         return (
@@ -267,7 +269,8 @@ export class Tables extends React.Component<{classes},{datapointsData: any, data
                 <BottomNavigation
                     //value={value}
                     onChange={(event, newValue) => {
-                        this.buttonType = newValue.split('/')[6];
+                        console.log(newValue)
+                        this.buttonType = newValue.split('/')[3];
                         this.setState({
                             datapointsIsLoaded: false
                         })
@@ -281,42 +284,48 @@ export class Tables extends React.Component<{classes},{datapointsData: any, data
                             root: classes.actionItem,
                             selected: classes.selected
                           }}
-                        value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/datapoints'
+                        value= {"http://"+HOST+"/datapoints"}
+                        //value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/datapoints'
                         />
                     <BottomNavigationAction key="2" label="Protocol"  icon={<FolderIcon />}
                         classes={{
                             root: classes.actionItem,
                             selected: classes.selected
                           }}
-                          value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/protocols'
+                          value= {"http://"+HOST+"/protocols"}
+                          //value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/protocols'
                           />
                     <BottomNavigationAction key="3" label="Device" icon={<FolderIcon />}
                         classes={{
                             root: classes.actionItem,
                             selected: classes.selected
                         }}
-                        value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/devices'
+                        value= {"http://"+HOST+"/devices"}
+                        //value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/devices'
                     />
                     <BottomNavigationAction key="5" label="Device Type" icon={<FolderIcon />}
                         classes={{
                             root: classes.actionItem,
                             selected: classes.selected
                         }}
-                    value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/devicetypes'
+                        value= {"http://"+HOST+"/devicetypes"}
+                        //value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/devicetypes'
                     />
                     <BottomNavigationAction key="5" label="Data Type" icon={<FolderIcon />}
                         classes={{
                             root: classes.actionItem,
                             selected: classes.selected
                         }}
-                        value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/datatypes'
+                        value= {"http://"+HOST+"/datatypes"}
+                        //value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/datatypes'
                     />
                     <BottomNavigationAction key="4" label="Modules" icon={<FolderIcon />}
                         classes={{
                             root: classes.actionItem,
                             selected: classes.selected
                         }}
-                        value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/modules'
+                        value= {"http://"+HOST+"/modules"}
+                        //value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/modules'
                     />
                 </BottomNavigation>
                 {this.state.datapointsIsLoaded && this.buttonType == 'datapoints' &&
