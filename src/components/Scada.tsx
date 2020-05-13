@@ -10,6 +10,7 @@ import WebSocket from './websocket';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import ButtonBase from '@material-ui/core/ButtonBase';
 
 const classes = getClasses();
 const BLOCK_HEIGHT = 133;
@@ -74,8 +75,13 @@ export class MotorHMI extends Component <HMIParams,HMIState>implements HMICompon
             headers:{'Content-Type': 'application/json'}, 
             body: JSON.stringify(data)
         }).then(res => {
-			console.log(data)
-        }).catch(err=>{console.log(err)});
+			this.anchorEl=null;
+			this.setState({
+				open: false
+			})
+		}).catch(err=>{console.log(err)});
+		this.anchorEl=null;
+		
     }
 
 
@@ -94,44 +100,48 @@ export class MotorHMI extends Component <HMIParams,HMIState>implements HMICompon
 
 	handleClick = (event) => {
 		 	this.anchorEl = event.currentTarget;
-			var bool = !this.state.open;
 			this.setState({
-				open: bool
+				open:true 
 			})
 	  };
 
 	  handleClose = () => {
-    	this.anchorEl=null;
+		this.anchorEl=null;
+		this.setState({
+				open: false
+			})
   	};
 	  
 	render(){
-		return(
+		return (
 			<Grid
 				item
 				container
 				justify="center"
 				xs={this.width}
-			> 
-			<div style={classes.motorBlack}> 
-			<img src="/public/motor_black.png" alt="motor" height={this.height}></img>
-			<WebSocket onData={this.onData} moduleId={this.props.moduleId} deviceId={this.props.id} datapointCode={this.props.datapoint} />
-				<div style={classes.motorRPM}> 
-					<Typography
-							variant="body1"
-						>
-							{this.state.rpm} rpm
-							<Button aria-describedby={this.props.id}  type="button" onClick={this.handleClick}>
-								Set value
-							</Button>
-							<Popover id={this.props.id} anchorEl={this.anchorEl} onClose={this.handleClose} open={Boolean(this.anchorEl)}>
-								<form>
-									<TextField id={this.props.id} label="Desired Value" onChange={this.handleChangeDesiredValue} />
-									<br />
-									<Button onClick={this.onSubmitDesiredValue}> Submit! </Button>
-								</form>
-							</Popover>
-						</Typography>
-					</div>
+			>
+				<div style={classes.motorBlack}>
+					<ButtonBase
+						aria-describedby={this.props.id}
+						onClick={this.handleClick}
+					>
+						<img src="/public/motor_black.png" alt="motor" height={this.height} ></img>
+						<WebSocket onData={this.onData} moduleId={this.props.moduleId} deviceId={this.props.id} datapointCode={this.props.datapoint} />
+						<div style={classes.motorRPM}>
+							<Typography
+								variant="body1"
+							>
+								{this.state.rpm} rpm
+									<Popover id={this.props.id} anchorEl={this.anchorEl} onClose={this.handleClose} open={this.state.open}>
+									<form>
+										<TextField id={this.props.id} label="Desired Value" onChange={this.handleChangeDesiredValue} />
+										<br />
+										<Button onClick={this.onSubmitDesiredValue}> Submit! </Button>
+									</form>
+								</Popover>
+							</Typography>
+						</div>
+					</ButtonBase>
 				</div>
 			</Grid>
 		)
