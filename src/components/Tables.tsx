@@ -44,13 +44,13 @@ const headersDevices = ["id","module_id","uuid","address","poll_rate"]
 const headersDevicetypes = ["id","name"]
 const headersModules = ["id","module_device_type_id","mac"]
 */
-interface ModulesData {
+type ModulesData = {
     "id": string,
     "module_device_type_id": string,
     "mac": string,
 }
 
-interface DatapointsData {
+type DatapointsData = {
     "id": string,
     "module_device_type_id": string,
     "name": string,
@@ -60,7 +60,7 @@ interface DatapointsData {
     "writable": boolean
 }
 
-interface DevicesData {
+type DevicesData  = {
     "id": string,
     "module_id": string,
     "uuid": string,
@@ -68,13 +68,13 @@ interface DevicesData {
     "poll_rate": string
 }
 
-interface ProtocolsData {
+type ProtocolsData = {
     "id": string,
     "datatype_id": string,
     "name": string,
 }
 
-interface DevicetypesData {
+type DevicetypesData = {
     "id": string,
     "protocol_id": string,
     "manufacturer": string,
@@ -82,7 +82,7 @@ interface DevicetypesData {
     "code": string
 }
 
-interface DatatypesData {
+type DatatypesData = {
     "id": string,
     "name": string,
 }

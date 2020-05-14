@@ -11,22 +11,28 @@ import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import ButtonBase from '@material-ui/core/ButtonBase';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const classes = getClasses();
 const BLOCK_HEIGHT = 133;
 const HOST = process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT;
 
-const MOTOR_ID = process.env.MOTOR_UUID
-const MOTOR_DATAPOINT = process.env.MOTOR_DATAPOINT_CODE
+const MOTOR_UUID = process.env.MOTOR_UUID
+const MOTOR_ID = process.env.MOTOR_ID
+const MOTOR_DATAPOINT = process.env.MOTOR_DATAPOINT
 const MOTOR_MODULE_ID = process.env.MOTOR_MODULE_ID
 
-const SERVO_ID = process.env.SERVO_UUID
-const SERVO_DATAPOINT = process.env.SERVO_DATAPOINT_CODE
+
+const SERVO_UUID = process.env.SERVO_UUID
+const SERVO_ID = process.env.SERVO_ID
+const SERVO_DATAPOINT = process.env.SERVO_DATAPOINT
 const SERVO_MODULE_ID = process.env.SERVO_MODULE_ID
 
 type HMIParams = {
 	rpm?: number,
 	id?: string,
+	uuid?: string,
+	onUpdate?(value: string): void,
 	moduleId?: string,
 	datapoint?: string,
 	angle?:number,
@@ -37,11 +43,19 @@ type HMIParams = {
 type HMIState = {
 	rpm?: number;
 	angle?: number;
+	percentage?: number;
 	open?: boolean;
 	input?: string;
 }
 
+
+type ScadaState = {
+	values: {}
+}
+
+
 export  interface HMIComponent<T,U>{  
+	onUpdate?(value: string): void,
 	height: number,
 	width: any,
 }
@@ -126,7 +140,7 @@ export class MotorHMI extends Component <HMIParams,HMIState>implements HMICompon
 						onClick={this.handleClick}
 					>
 						<img src="/public/motor_black.png" alt="motor" height={this.height} ></img>
-						<WebSocket onData={this.onData} moduleId={this.props.moduleId} deviceId={this.props.id} datapointCode={this.props.datapoint} />
+						<WebSocket onData={this.onData} moduleId={this.props.moduleId} deviceId={this.props.uuid} datapointCode={this.props.datapoint} />
 						<div style={classes.motorRPM}>
 							<Typography
 								variant="body1"
@@ -214,11 +228,15 @@ export class ServoHMI extends Component <HMIParams,HMIState> implements HMICompo
 
 	state ={
 		angle: 0,
-		setable: true
+		setable: true,
+		input: "",
+		percentage: 0,
+		open: false
 	}
 
 	height: number;
 	width: any;
+	anchorEl: any;
 
 	constructor(props){
 		super(props);
@@ -226,17 +244,86 @@ export class ServoHMI extends Component <HMIParams,HMIState> implements HMICompo
 		this.width = props.width;
 	}
 
-	render(){
-		return(
-			 <Grid
-				 item
-				 container
-				 justify="center"
-				 xs={this.width}
-			 >
-				<div style={classes.boilerBlack}> 
-					<img src="/public/servo_black.png" alt="boiler" height={this.height} ></img>
 
+	onData = (value) => {
+		var angle = Number(value)
+		var percentage = angle/360*100;
+
+		this.setState({
+			angle: angle,
+			percentage: percentage
+		})
+	}
+
+	onSubmitDesiredValue = () => {
+        var data = {};
+        data["device_id"] = this.props.id;
+        data["datapoint"] = this.props.datapoint;
+        data["value"] = this.state.input;
+        fetch("http://" + HOST +"/modules/"+ String(this.props.moduleId + "/set_value") , {
+            method: 'POST', 
+            headers:{'Content-Type': 'application/json'}, 
+            body: JSON.stringify(data)
+        }).then(res => {
+			this.anchorEl=null;
+			this.setState({
+				open: false
+			})
+		}).catch(err=>{console.log(err)});
+		this.anchorEl=null;
+		
+    }
+
+
+    handleChangeDesiredValue = (event) => {
+        this.setState({
+            input: event.target.value
+        })
+	}
+
+	handleClick = (event) => {
+		 	this.anchorEl = event.currentTarget;
+			this.setState({
+				open:true 
+			})
+	  };
+
+	  handleClose = () => {
+		this.anchorEl=null;
+		this.setState({
+				open: false
+			})
+  	};
+
+	render(){
+		return (
+			<Grid
+				item
+				container
+				justify="center"
+				xs={this.width}
+			>
+				<div style={classes.boilerBlack}>
+					<WebSocket onData={this.onData} moduleId={this.props.moduleId} deviceId={this.props.uuid} datapointCode={this.props.datapoint} />
+					<ButtonBase
+						aria-describedby={this.props.id}
+						onClick={this.handleClick}
+					>
+						<img src="/public/servo_black.png" alt="boiler" height={this.height} ></img>
+					</ButtonBase>
+					<LinearProgress variant="determinate" value={this.state.percentage} />
+					<Typography
+						variant="body1"
+					>
+						Angle: {this.state.angle} °
+					</Typography>
+					<Popover id={this.props.id} anchorEl={this.anchorEl} onClose={this.handleClose} open={this.state.open}>
+						<form>
+							<TextField id={this.props.id} label="Desired Value" onChange={this.handleChangeDesiredValue} />
+							<br />
+							<Button onClick={this.onSubmitDesiredValue}> Submit! </Button>
+						</form>
+					</Popover>
 				</div>
 			</Grid>
 		)
@@ -287,7 +374,20 @@ export class GridFiller extends Component <HMIParams,HMIState>implements HMIComp
 }
 
 
-export class Scada extends Component {
+export class Scada extends Component <{},ScadaState>{
+	state ={
+		values: {
+			'motor_1': 0
+		}
+	}
+	
+	onUpdate = (id, value) => {
+		var values = this.state.values;
+		values[id] = Number(value);
+		this.setState({
+			values: values
+		})
+	}
 
 	render() {
 		return (
@@ -314,13 +414,17 @@ export class Scada extends Component {
 							/>
 							<MotorHMI
 								id={MOTOR_ID}
+								uuid={MOTOR_UUID}
 								moduleId={MOTOR_MODULE_ID}
 								datapoint={MOTOR_DATAPOINT}
 								height={1}
 								width={4}
 							/>
 							<ServoHMI
-								angle={10}
+								id={SERVO_ID}
+								uuid={SERVO_UUID}
+								moduleId={SERVO_MODULE_ID}
+								datapoint={SERVO_DATAPOINT}
 								height={1}
 								width={2}
 							/>
