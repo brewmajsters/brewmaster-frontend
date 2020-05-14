@@ -16,14 +16,26 @@ import { withStyles } from "@material-ui/core/styles";
 
 
 const tablesClasses = getClasses();
-const HOST = process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT; 
+const HOST = process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT;
 //const HOST = "localhost:5000";
-const headers = {'datapoints' : ["id", "module_device_type_id", "name", "units", "code","legend","writable"],
-                 'protocols' : ["id","datatype_id","name"],
-                 'devices' : ["id","module_id","uuid","address","poll_rate"],
-                 'devicetypes' : ["id","protocol_id","manufacturer","model","code"],
-                 'datatypes' : ["id","name"],
-                 'modules' : ["id","module_device_type_id","mac"]}
+const headers = {
+    'datapoints': ["id", "module_device_type_id", "name", "units", "code", "legend", "writable"],
+    'protocols': ["id", "datatype_id", "name"],
+    'devices': ["id", "module_id", "uuid", "address", "poll_rate"],
+    'devicetypes': ["id", "protocol_id", "manufacturer", "model", "code"],
+    'datatypes': ["id", "name"],
+    'modules': ["id", "module_device_type_id", "mac"]
+}
+
+const NAVIGATION = [
+    ['Datapoints', '/datapoints'],
+    ['Protocols', '/protocols'],
+    ['Devices', '/devices'],
+    ['Device Types', '/devicetypes'],
+    ['Data Types', '/datatypes'],
+    ['Modules', '/modules']
+
+];
 
 /* Neviem naco je toto ked je vsetko v const headers
 const headersDatapoints = ["id", "module_device_type_id","name", "units","code","legend","writable"]
@@ -41,7 +53,7 @@ interface ModulesData {
 interface DatapointsData {
     "id": string,
     "module_device_type_id": string,
-    "name":string,
+    "name": string,
     "units": string,
     "code": string,
     "legend": string,
@@ -51,7 +63,7 @@ interface DatapointsData {
 interface DevicesData {
     "id": string,
     "module_id": string,
-    "uuid":string,
+    "uuid": string,
     "address": string,
     "poll_rate": string
 }
@@ -59,37 +71,37 @@ interface DevicesData {
 interface ProtocolsData {
     "id": string,
     "datatype_id": string,
-    "name":string,
+    "name": string,
 }
 
 interface DevicetypesData {
     "id": string,
     "protocol_id": string,
-    "manufacturer":string,
+    "manufacturer": string,
     "model": string,
     "code": string
 }
 
 interface DatatypesData {
     "id": string,
-    "name":string,
+    "name": string,
 }
 
 
- export function tableHeaders(headerLabels: string[]){
+export function tableHeaders(headerLabels: string[]) {
     return (
-            <TableRow key="1">
+        <TableRow key="1">
             {headerLabels.map((label) =>
                 <TableCell>
                     {label}
                 </TableCell>
             )}
-            </TableRow>
+        </TableRow>
     );
 }
 
 
-export function tableDatapoints(data: DatapointsData[]){
+export function tableDatapoints(data: DatapointsData[]) {
     console.log("Datapoints table")
     return (
         <TableBody>
@@ -123,7 +135,7 @@ export function tableDatapoints(data: DatapointsData[]){
 };
 
 
-export function tableProtocols(data: ProtocolsData[]){
+export function tableProtocols(data: ProtocolsData[]) {
     return (
         <TableBody>
             {data.map(row =>
@@ -144,7 +156,7 @@ export function tableProtocols(data: ProtocolsData[]){
 };
 
 
-export function tableDevices(data: DevicesData[]){
+export function tableDevices(data: DevicesData[]) {
     console.log(data)
     return (
         <TableBody>
@@ -172,7 +184,7 @@ export function tableDevices(data: DevicesData[]){
 };
 
 
-export function tableDevicetypes(data: DevicetypesData[]){
+export function tableDevicetypes(data: DevicetypesData[]) {
     console.log(data)
     return (
         <TableBody>
@@ -200,7 +212,7 @@ export function tableDevicetypes(data: DevicetypesData[]){
 };
 
 
-export function tableDatatypes(data: DatatypesData[]){
+export function tableDatatypes(data: DatatypesData[]) {
     return (
         <TableBody>
             {data.map(row =>
@@ -218,7 +230,7 @@ export function tableDatatypes(data: DatatypesData[]){
 };
 
 
-export function tableModules(data: ModulesData[]){
+export function tableModules(data: ModulesData[]) {
     return (
         <TableBody>
             {data.map(row =>
@@ -240,10 +252,12 @@ export function tableModules(data: ModulesData[]){
 
 
 
-export class Tables extends React.Component<{classes},{datapointsData: any, datapointsIsLoaded: boolean}> {
-    buttonType:string = "default button";
+export class Tables extends React.Component<{ classes }, { datapointsData: any, datapointsIsLoaded: boolean }> {
 
-    constructor(props){
+    buttonType: string = "default button";
+
+
+    constructor(props) {
         super(props);
         this.state = {
             datapointsData: [],
@@ -251,16 +265,17 @@ export class Tables extends React.Component<{classes},{datapointsData: any, data
         }
     }
 
+
     generateTable = (link: string) => {
         return (
             fetch(link)
                 .then((response) => response.json())
                 .then((jsonData) => {
-                   this.setState({
+                    this.setState({
                         datapointsData: jsonData,
                         datapointsIsLoaded: true
-                   })
-                   console.log(this.state)
+                    })
+                    console.log(this.state)
                 })
                 .catch((error) => {
                     console.log(error)
@@ -269,18 +284,30 @@ export class Tables extends React.Component<{classes},{datapointsData: any, data
         );
     }
 
-    renderTable(buttonType: string, data: [] ){
+
+    renderTable(buttonType: string, data: []) {
         return (
-            <Table 
+            <Table
                 size="small"
-                >
-                        <TableHead>
-                            {tableHeaders(headers[buttonType])}   
-                        </TableHead>
-                        {tableDatapoints(data)}
-           </Table>
+            >
+                <TableHead>
+                    {tableHeaders(headers[buttonType])}
+                </TableHead>
+                {tableDatapoints(data)}
+            </Table>
         )
     }
+
+
+    onNavigationChange = (event, newValue) => {
+        console.log(newValue)
+        this.buttonType = newValue.split('/')[3];
+        this.setState({
+            datapointsIsLoaded: false
+        })
+        this.generateTable(newValue);
+    }
+
 
     render() {
         const { classes } = this.props;
@@ -288,73 +315,26 @@ export class Tables extends React.Component<{classes},{datapointsData: any, data
             <div>
                 <BottomNavigation
                     //value={value}
-                    onChange={(event, newValue) => {
-                        console.log(newValue)
-                        this.buttonType = newValue.split('/')[3];
-                        this.setState({
-                            datapointsIsLoaded: false
-                        })
-                        this.generateTable(newValue);
-                    }}
+                    onChange={this.onNavigationChange}
                     showLabels
                 >
-                    <BottomNavigationAction
-                        key="1" label="Datapoints"  icon={<FolderIcon />}
-                        classes={{
-                            root: classes.actionItem,
-                            selected: classes.selected
-                          }}
-                        value= {"http://"+HOST+"/datapoints"}
-                        //value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/datapoints'
-                        />
-                    <BottomNavigationAction key="2" label="Protocol"  icon={<FolderIcon />}
-                        classes={{
-                            root: classes.actionItem,
-                            selected: classes.selected
-                          }}
-                          value= {"http://"+HOST+"/protocols"}
-                          //value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/protocols'
-                          />
-                    <BottomNavigationAction key="3" label="Device" icon={<FolderIcon />}
-                        classes={{
-                            root: classes.actionItem,
-                            selected: classes.selected
-                        }}
-                        value= {"http://"+HOST+"/devices"}
-                        //value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/devices'
-                    />
-                    <BottomNavigationAction key="5" label="Device Type" icon={<FolderIcon />}
-                        classes={{
-                            root: classes.actionItem,
-                            selected: classes.selected
-                        }}
-                        value= {"http://"+HOST+"/devicetypes"}
-                        //value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/devicetypes'
-                    />
-                    <BottomNavigationAction key="5" label="Data Type" icon={<FolderIcon />}
-                        classes={{
-                            root: classes.actionItem,
-                            selected: classes.selected
-                        }}
-                        value= {"http://"+HOST+"/datatypes"}
-                        //value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/datatypes'
-                    />
-                    <BottomNavigationAction key="4" label="Modules" icon={<FolderIcon />}
-                        classes={{
-                            root: classes.actionItem,
-                            selected: classes.selected
-                        }}
-                        value= {"http://"+HOST+"/modules"}
-                        //value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/modules'
-                    />
+                    {NAVIGATION.map((data, i) => {
+                        return (
+                            <BottomNavigationAction
+                                key={String(i)} 
+                                label={data[0]} 
+                                icon={<FolderIcon />}
+                                classes={{
+                                    root: classes.actionItem,
+                                    selected: classes.selected
+                                }}
+                                value={"http://" + HOST + data[1]}
+                            />)
+                    })}
                 </BottomNavigation>
-
-                <Table>
-                {this.state.datapointsIsLoaded && 
-                            this.renderTable(this.buttonType,this.state.datapointsData)
-                    }
-               
-                </Table>
+                {this.state.datapointsIsLoaded &&
+                    this.renderTable(this.buttonType, this.state.datapointsData)
+                }
             </div>
         );
 
