@@ -103,13 +103,13 @@ export class MotorHMI extends Component <HMIParams,HMIState>implements HMICompon
 
     handleChangeDesiredValue = (event) => {
         this.setState({
-            input: String(event.target.value/30)
+            input: String(event.target.value*100)
         })
 	}
 
 	onData = (value) => {
 		this.setState({
-			rpm: value*30
+			rpm: value*30/100
 		})
 	}
 
