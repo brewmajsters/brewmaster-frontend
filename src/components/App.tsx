@@ -11,9 +11,10 @@ import {
 } from "react-router-dom";
 import Scada from "./Scada";
 import Tables from "./Tables";
+import Divider from "@material-ui/core/Divider";
+import WebSocket from './websocket';
 
 const drawerWidth = 240;
-
 const classes= { 
 			body: {
 				display: 'flex',
@@ -36,7 +37,7 @@ export default class App extends Component{
 					<div style={classes.body}>
 						<Grid 
 							container 
-							spacing={7}
+							spacing={2}
 						>
 							<Grid 
 								item
@@ -51,9 +52,10 @@ export default class App extends Component{
 							>
 								<LeftBar/>
 							</Grid> 
+							<Divider orientation="vertical"/>
 							<Grid 
 								item
-								xs={10}
+								xs={9}
 							>
 								<div 
 									style={classes.main}
