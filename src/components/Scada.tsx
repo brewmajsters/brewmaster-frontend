@@ -32,6 +32,7 @@ type HMIParams = {
 	rpm?: number,
 	id?: string,
 	uuid?: string,
+	variant?: string,
 	onUpdate?(value: string): void,
 	moduleId?: string,
 	datapoint?: string,
@@ -135,17 +136,20 @@ export class MotorHMI extends Component <HMIParams,HMIState>implements HMICompon
 				xs={this.width}
 			>
 				<div style={classes.motorBlack}>
+					<div style={classes.motorRPM}>
+						<Typography
+							variant="body1"
+						>
+							{this.state.rpm} rpm
+						</Typography>
+					</div>
 					<ButtonBase
 						aria-describedby={this.props.id}
 						onClick={this.handleClick}
 					>
-						<img src="/public/motor_black.png" alt="motor" height={this.height} ></img>
+						<img src="/public/motor_black2.png" alt="motor" height={this.height} ></img>
 						<WebSocket onData={this.onData} moduleId={this.props.moduleId} deviceId={this.props.uuid} datapointCode={this.props.datapoint} />
-						<div style={classes.motorRPM}>
-							<Typography
-								variant="body1"
-							>
-								{this.state.rpm} rpm
+						
 									<Popover id={this.props.id} anchorEl={this.anchorEl} onClose={this.handleClose} open={this.state.open}>
 									<form>
 										<TextField id={this.props.id} label="Desired Value" onChange={this.handleChangeDesiredValue} />
@@ -153,9 +157,8 @@ export class MotorHMI extends Component <HMIParams,HMIState>implements HMICompon
 										<Button onClick={this.onSubmitDesiredValue}> Submit! </Button>
 									</form>
 								</Popover>
-							</Typography>
-						</div>
 					</ButtonBase>
+						
 				</div>
 			</Grid>
 		)
@@ -183,7 +186,7 @@ export class TransmisionHMI extends Component <HMIParams,HMIState> implements HM
 				xs={this.width}
 			>
 				<div style={classes.transmission}>
-				<img src="/public/Transmission.png" alt="motor" height={this.height}></img>
+				<img src="/public/gearbox_w_arrows.png" alt="motor" height={this.height-20}></img>
 				</div>
 			</Grid>
 		)
@@ -215,7 +218,7 @@ export class TankHMI extends Component <HMIParams,HMIState> implements HMICompon
 				 xs={this.width}
 			 >
 				<div style={classes.boilerBlack}> 
-					<img src="/public/boiler_black.png" alt="boiler" height={this.height}></img>
+					<img src="/public/tank.png" alt="boiler" height={this.height}></img>
 
 				</div>
 			</Grid>
@@ -365,8 +368,41 @@ export class GridFiller extends Component <HMIParams,HMIState>implements HMIComp
 				item
 				xs={this.width}
 			>
-				<div 
+				<div style={{minHeight:this.height}}
 				/>
+			</Grid>
+		)
+	}
+
+}
+export class PipeHMI extends Component <HMIParams,HMIState>implements HMIComponent <HMIParams,{}>{
+
+	height: number;
+	width: any;
+	constructor(props){
+		super(props)
+		this.width = props.width;
+		this.height = props.height*BLOCK_HEIGHT;
+	}
+
+	renderSwithcParams(params){
+			switch(params) {
+						case "normal": 
+							return <img src="/public/horizontalPipe.png" alt="boiler" height={this.height} ></img>;
+						case "Lend":
+							return <img src="/public/pipeLeftEnd.png" alt="boiler" height={this.height} ></img>;
+				}
+	}
+
+	render(){
+		return(
+			<Grid
+				item
+				xs={this.width}
+			>
+				{
+					this.renderSwithcParams(this.props.variant)	
+					}
 			</Grid>
 		)
 	}
@@ -394,20 +430,28 @@ export class Scada extends Component <{},ScadaState>{
 
 			<div>
 				<Grid container spacing={2}>
-					<Grid item>
-						<Typography variant={"h2"}> SCADA</Typography>
-					</Grid>
 					<Grid item xs={12} >
 						<ContainerHMI>
-							<TankHMI
-								rpm={0}
-								height={2}
-								width={2}
-							/>
 							<GridFiller 
-								height={0}
-								width={11}
+								height={0.2}
+								width={12}
 							/>
+							<ContainerHMI>
+								<TankHMI
+									rpm={0}
+									height={4}
+									width={2}
+								/>
+								<ServoHMI
+									id={SERVO_ID}
+									uuid={SERVO_UUID}
+									moduleId={SERVO_MODULE_ID}
+									datapoint={SERVO_DATAPOINT}
+									height={1}
+									width={2}
+								/>
+							</ContainerHMI>
+							
 							<TransmisionHMI
 								height={1}
 								width={2}
@@ -418,16 +462,9 @@ export class Scada extends Component <{},ScadaState>{
 								moduleId={MOTOR_MODULE_ID}
 								datapoint={MOTOR_DATAPOINT}
 								height={1}
-								width={4}
-							/>
-							<ServoHMI
-								id={SERVO_ID}
-								uuid={SERVO_UUID}
-								moduleId={SERVO_MODULE_ID}
-								datapoint={SERVO_DATAPOINT}
-								height={1}
 								width={2}
 							/>
+							
 						</ContainerHMI>
 					</Grid>
 				</Grid>

@@ -8,17 +8,14 @@ export default function getClasses(){
 			},
 			motorBlack: {
 				position: 'relative' as 'relative',
-				color: 'white'
 				//maxHeight: '142px',
-				//justifyContent: "center",
-      //    		alignItems: "center"
+				justifyContent: "center" as "center",
 				//backgroundImage: 'url("/public/motor_black.png")'
 			},
 			motorRPM: {
-				color: 'white',
             	position: 'absolute' as 'absolute',
-				top: '71px',
-				left: '200px',
+				top: '20',
+				textAlign: "center" as "center",
 				zIndex: 2
 			},
 			boilerBlack: {
