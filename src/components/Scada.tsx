@@ -21,7 +21,7 @@ const MOTOR_UUID = process.env.MOTOR_UUID
 const MOTOR_ID = process.env.MOTOR_ID
 const MOTOR_DATAPOINT = process.env.MOTOR_DATAPOINT
 const MOTOR_MODULE_ID = process.env.MOTOR_MODULE_ID
-
+const MOTOR_SET_DATAPOINT = process.env.MOTOR_DATAPOINT_SET
 
 const SERVO_UUID = process.env.SERVO_UUID
 const SERVO_ID = process.env.SERVO_ID
@@ -31,6 +31,7 @@ const SERVO_MODULE_ID = process.env.SERVO_MODULE_ID
 type HMIParams = {
 	rpm?: number,
 	id?: string,
+	setDatapoint?: string,
 	uuid?: string,
 	variant?: string,
 	onUpdate?(value: string): void,
@@ -83,7 +84,7 @@ export class MotorHMI extends Component <HMIParams,HMIState>implements HMICompon
 	onSubmitDesiredValue = () => {
         var data = {};
         data["device_id"] = this.props.id;
-        data["datapoint"] = this.props.datapoint;
+        data["datapoint"] = this.props.setDatapoint;
         data["value"] = this.state.input;
         fetch("http://" + HOST +"/modules/"+ String(this.props.moduleId + "/set_value") , {
             method: 'POST', 
@@ -461,6 +462,7 @@ export class Scada extends Component <{},ScadaState>{
 								uuid={MOTOR_UUID}
 								moduleId={MOTOR_MODULE_ID}
 								datapoint={MOTOR_DATAPOINT}
+								setDatapoint={MOTOR_SET_DATAPOINT}
 								height={1}
 								width={2}
 							/>
