@@ -32,6 +32,50 @@ const headersDevices = ["id","module_id","uuid","address","poll_rate"]
 const headersDevicetypes = ["id","name"]
 const headersModules = ["id","module_device_type_id","mac"]
 */
+interface ModulesData {
+    "id": string,
+    "module_device_type_id": string,
+    "mac": string,
+}
+
+interface DatapointsData {
+    "id": string,
+    "module_device_type_id": string,
+    "name":string,
+    "units": string,
+    "code": string,
+    "legend": string,
+    "writable": boolean
+}
+
+interface DevicesData {
+    "id": string,
+    "module_id": string,
+    "uuid":string,
+    "address": string,
+    "poll_rate": string
+}
+
+interface ProtocolsData {
+    "id": string,
+    "datatype_id": string,
+    "name":string,
+}
+
+interface DevicetypesData {
+    "id": string,
+    "protocol_id": string,
+    "manufacturer":string,
+    "model": string,
+    "code": string
+}
+
+interface DatatypesData {
+    "id": string,
+    "name":string,
+}
+
+
  export function tableHeaders(headerLabels: string[]){
     return (
             <TableRow key="1">
@@ -44,16 +88,6 @@ const headersModules = ["id","module_device_type_id","mac"]
     );
 }
 
-
-interface DatapointsData {
-    "id": string,
-    "module_device_type_id": string,
-    "name":string,
-    "units": string,
-    "code": string,
-    "legend": string,
-    "writable": boolean
-}
 
 export function tableDatapoints(data: DatapointsData[]){
     console.log("Datapoints table")
@@ -88,11 +122,6 @@ export function tableDatapoints(data: DatapointsData[]){
     );
 };
 
-interface ProtocolsData {
-    "id": string,
-    "datatype_id": string,
-    "name":string,
-}
 
 export function tableProtocols(data: ProtocolsData[]){
     return (
@@ -114,13 +143,6 @@ export function tableProtocols(data: ProtocolsData[]){
     );
 };
 
-interface DevicesData {
-    "id": string,
-    "module_id": string,
-    "uuid":string,
-    "address": string,
-    "poll_rate": string
-}
 
 export function tableDevices(data: DevicesData[]){
     console.log(data)
@@ -149,13 +171,6 @@ export function tableDevices(data: DevicesData[]){
     );
 };
 
-interface DevicetypesData {
-    "id": string,
-    "protocol_id": string,
-    "manufacturer":string,
-    "model": string,
-    "code": string
-}
 
 export function tableDevicetypes(data: DevicetypesData[]){
     console.log(data)
@@ -184,10 +199,6 @@ export function tableDevicetypes(data: DevicetypesData[]){
     );
 };
 
-interface DatatypesData {
-    "id": string,
-    "name":string,
-}
 
 export function tableDatatypes(data: DatatypesData[]){
     return (
@@ -206,11 +217,6 @@ export function tableDatatypes(data: DatatypesData[]){
     );
 };
 
-interface ModulesData {
-    "id": string,
-    "module_device_type_id": string,
-    "mac":string,
-}
 
 export function tableModules(data: ModulesData[]){
     return (
@@ -232,8 +238,10 @@ export function tableModules(data: ModulesData[]){
     );
 };
 
+
+
 export class Tables extends React.Component<{classes},{datapointsData: any, datapointsIsLoaded: boolean}> {
-    buttonType = "default button";
+    buttonType:string = "default button";
 
     constructor(props){
         super(props);
@@ -261,7 +269,19 @@ export class Tables extends React.Component<{classes},{datapointsData: any, data
         );
     }
 
- 
+    renderTable(buttonType: string, data: [] ){
+        return (
+            <Table 
+                size="small"
+                >
+                        <TableHead>
+                            {tableHeaders(headers[buttonType])}   
+                        </TableHead>
+                        {tableDatapoints(data)}
+           </Table>
+        )
+    }
+
     render() {
         const { classes } = this.props;
         return (
@@ -328,54 +348,13 @@ export class Tables extends React.Component<{classes},{datapointsData: any, data
                         //value='https://virtserver.swaggerhub.com/Brewmaster/Brewmaster/1.0.0/modules'
                     />
                 </BottomNavigation>
-                {this.state.datapointsIsLoaded && this.buttonType == 'datapoints' &&
-                    <Table>
-                        <TableHead>
-                            {tableHeaders(headers[this.buttonType])}   
-                        </TableHead>
-                        {tableDatapoints(this.state.datapointsData)}
-                    </Table>
-                }
-                {this.state.datapointsIsLoaded && this.buttonType == 'protocols' &&
-                    <Table>
-                        <TableHead>
-                            {tableHeaders(headers[this.buttonType])}   
-                        </TableHead>
-                        {tableProtocols(this.state.datapointsData)}
-                    </Table>
-                }
-                {this.state.datapointsIsLoaded && this.buttonType == 'devices' &&
-                    <Table>
-                        <TableHead>
-                            {tableHeaders(headers[this.buttonType])}   
-                        </TableHead>
-                        {tableDevices(this.state.datapointsData)}
-                    </Table>
-                }
-                {this.state.datapointsIsLoaded && this.buttonType == 'devicetypes' &&
-                    <Table>
-                        <TableHead>
-                            {tableHeaders(headers[this.buttonType])}   
-                        </TableHead>
-                        {tableDevicetypes(this.state.datapointsData)}
-                    </Table>
-                }
-                {this.state.datapointsIsLoaded && this.buttonType == 'datatypes' &&
-                    <Table>
-                        <TableHead>
-                            {tableHeaders(headers[this.buttonType])}   
-                        </TableHead>
-                        {tableDatatypes(this.state.datapointsData)}
-                    </Table>
-                }
-                {this.state.datapointsIsLoaded && this.buttonType == 'modules' &&
-                    <Table>
-                        <TableHead>
-                            {tableHeaders(headers[this.buttonType])}   
-                        </TableHead>
-                        {tableModules(this.state.datapointsData)}
-                    </Table>
-                }
+
+                <Table>
+                {this.state.datapointsIsLoaded && 
+                            this.renderTable(this.buttonType,this.state.datapointsData)
+                    }
+               
+                </Table>
             </div>
         );
 
