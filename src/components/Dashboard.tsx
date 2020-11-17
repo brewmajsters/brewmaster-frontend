@@ -153,7 +153,7 @@ export class Chart extends React.Component < {datapoint: any, deviceId: any,  de
         return (
             <Card>
 
-                    <WebSocket onData={this.onData} moduleId={this.props.moduleId} deviceId={this.props.deviceId} datapointCode={this.props.datapoint.code} />
+                    <WebSocket onData={this.onData} moduleId={this.props.moduleId} deviceId={this.props.deviceUuid} datapointCode={this.props.datapoint.code} />
                     
                     <CardContent>
                         <Typography

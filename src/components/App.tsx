@@ -10,12 +10,11 @@ import {
 	Link
 } from "react-router-dom";
 import Scada from "./Scada";
+import Tables from "./Tables";
 import Divider from "@material-ui/core/Divider";
-import Recipe from './Recipe';
 import WebSocket from './websocket';
 
 const drawerWidth = 240;
-
 const classes= { 
 			body: {
 				display: 'flex',
@@ -73,11 +72,11 @@ export default class App extends Component{
 											> 
 												<Dashboard />
 											</Route>
-											<Route 
-												path="/recipe"
-											>
-												<Recipe />
-											</Route>	
+											<Route
+												path="/tables/"
+												>
+												<Tables/>
+											</Route>
 										</div>
 									</Switch>
 								</div>

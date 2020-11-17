@@ -60,7 +60,6 @@ const LeftBarItem = (props: { path: string, name: string, image: string }) => {
 
 export class LeftBar extends Component {
 
-
 	render() {
 		return (
 			<div
@@ -77,11 +76,10 @@ export class LeftBar extends Component {
 						name="Dashboard"
 						image="/public/dashboardIcon.png"
 					/>
-			
 					<LeftBarItem
-						path="/recipe"
-						name="Recept maker"
-						image="/public/dashboardIcon.png"
+						path="/tables/"
+						name="Configuration"
+						image="dashboard"
 					/>
 					</li>
 				<Divider />

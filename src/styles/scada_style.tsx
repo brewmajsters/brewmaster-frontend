@@ -8,42 +8,31 @@ export default function getClasses(){
 			},
 			motorBlack: {
 				position: 'relative' as 'relative',
-				top: '-145px',
-				left: '229px',
-				color: 'white',
-				minWidth: '326px',
-				minHeight: '142px',
-				maxWidth: '326px',
-				maxHeight: '142px',
-				backgroundImage: 'url("/public/motor_black.png")'
+				//maxHeight: '142px',
+				justifyContent: "center" as "center",
+				//backgroundImage: 'url("/public/motor_black.png")'
 			},
 			motorRPM: {
-				color: 'white',
-				position: 'relative' as 'relative',
-				top: '71px',
-				left: '200px',
-				fontFamily: 'Roboto',
+            	position: 'absolute' as 'absolute',
+				top: '20',
+				textAlign: "center" as "center",
+				zIndex: 2
 			},
 			boilerBlack: {
 				position: 'relative' as 'relative',
-				left: '34px',
-				minWidth: '171px',
-				minHeight: '210px',
-				maxWidth: '171px',
-				maxHeight: '210px',
-				backgroundImage: 'url("/public/boiler_black.png")'
+				//maxHeight: '210px',
+				justifyContent: "center",
+          		alignItems: "center"
 			},
 			boilerRPM: {
 				// todo:
 			},
 			transmission: {
 				position: 'relative' as 'relative',
-				left: '0rem',
-				minWidth: '228px',
-				minHeight: '172px',
-				maxWidth: '228px',
 				maxHeight: '172px',
-				backgroundImage: 'url("/public/Transmission.png")'
+				justifyContent: "center",
+          		alignItems: "center"
+
 			},
 			root: {
 				padding: '2px 4px',
