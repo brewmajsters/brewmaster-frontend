@@ -21,6 +21,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Green from '@material-ui/core/colors/green'
 
 const classes = getClasses();
 const BLOCK_HEIGHT = 133;
@@ -41,7 +42,7 @@ const SERVO_ID = process.env.SERVO_ID
 const SERVO_DATAPOINT = process.env.SERVO_DATAPOINT
 const SERVO_MODULE_ID = process.env.SERVO_MODULE_ID
 
-const ENGINE_MOTION_STATES = ['FWD', 'REV', 'FWD JOGG', 'REV JOGG', 'STOP', 'BREAK']
+const ENGINE_MOTION_STATES = ['FWD', 'REV', 'FWD_JOG', 'REV_JOG', 'STOP', 'BREAK']
 
 type HMIParams = {
 	rpm?: number,
@@ -529,7 +530,8 @@ class EngineTabButtons extends Component<{ width: any }, {}> {
 		this.height = props.height * BLOCK_HEIGHT;
 	}
 	state = {
-		value: 0
+		value: 0,
+		engine_state: "FWD" 
 	}
 
 	onData = (value) => {
@@ -542,7 +544,7 @@ class EngineTabButtons extends Component<{ width: any }, {}> {
 			value: newValue
 		});
 		var data = {};
-		data['value'] = String(newValue);
+		data['value'] = ENGINE_MOTION_STATES[newValue];
 		fetch("http://" + HOST + "/device_datapoints/" + ENGINE_MOTION_SET_DATAPOINT, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -557,12 +559,12 @@ class EngineTabButtons extends Component<{ width: any }, {}> {
 			<Card
 			style={classes.engine}	
 			>
-				<WebSocket onData={this.onData} moduleId={ENGINE_MODULE_ID} deviceId={ENGINE_ID} datapointCode="GET_MOTION" />
+				<WebSocket onData={this.onData} moduleId={ENGINE_MODULE_ID} deviceId={ENGINE_ID} datapointCode="SET_MOTION" />
 				<Typography
 					component="h2"
 					variant="h5"
 					align="center"
-					color="secondary"
+					color="primary"
 				>
 					Engine Motion Settings:
 				</Typography>
@@ -606,7 +608,7 @@ class EngineInfoLine extends Component<{ label: any, moduleId: string, deviceId:
 				<Typography
 					variant="h5"
 				>
-					{this.props.label}: { this.props.datapointCode === "GET_MOTION" && ENGINE_MOTION_STATES[Math.floor(this.state.recievedValue)]} {!(this.props.datapointCode === "GET_MOTION" ) && this.state.recievedValue}
+					{this.props.label}: {this.state.recievedValue} 
 				</Typography>
 				<br />
 				<Divider />

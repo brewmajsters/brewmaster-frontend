@@ -19,7 +19,7 @@ const classes= {
 			body: {
 			},
 			main:{
-				marginTop: 100,
+				marginTop: 20,
 				marginLeft: 20,
 			}
 		};
@@ -37,12 +37,6 @@ export default class App extends Component{
 							container 
 							spacing={2}
 						>
-							<Grid 
-								item
-								xs={12}
-							>
-								<TopBar/>
-							</Grid>
 							<Grid 
 								item
 								container
