@@ -237,7 +237,7 @@ export default class Dashboard extends React.Component{
     }
      
     onSubmitPollRate = (deviceId, deviceAddress, moduleId, id) => {
-         event.preventDefault()
+        event.preventDefault()
         console.log(id,this.state.inputsPollRate) 
         var data = {
         "device_id": deviceId,

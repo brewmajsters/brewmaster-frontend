@@ -17,11 +17,10 @@ import WebSocket from './websocket';
 const drawerWidth = 240;
 const classes= { 
 			body: {
-				display: 'flex',
 			},
 			main:{
 				marginTop: 100,
-				width: `calc(100% - ${drawerWidth}px)`,
+				marginLeft: 20,
 			}
 		};
 
@@ -34,7 +33,6 @@ export default class App extends Component{
 	render () {
 		return (
 			<BrowserRouter>
-					<div style={classes.body}>
 						<Grid 
 							container 
 							spacing={2}
@@ -42,20 +40,13 @@ export default class App extends Component{
 							<Grid 
 								item
 								xs={12}
-								spacing={0}
 							>
 								<TopBar/>
 							</Grid>
 							<Grid 
-								item 
-								xs={2}
-							>
-								<LeftBar/>
-							</Grid> 
-							<Divider orientation="vertical"/>
-							<Grid 
 								item
-								xs={9}
+								container
+								xs={12}
 							>
 								<div 
 									style={classes.main}
@@ -82,7 +73,6 @@ export default class App extends Component{
 								</div>
 							</Grid>
 						</Grid>
-					</div>
 			</BrowserRouter>
 		);
 	}

@@ -33,7 +33,7 @@ export function TopBar() {
 		<AppBar position="fixed" style={classes.appBar}>
 			<Toolbar>
 				<Typography variant="h4" color={"inherit"} noWrap>
-					<LocalDrinkIcon /> Smartbrew - Brewmasters
+					<LocalDrinkIcon /> PILLCRUSHER 2000 - Brewmasters
 					</Typography>
 			</Toolbar>
 		</AppBar>

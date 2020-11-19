@@ -38,7 +38,7 @@ export default function getClasses(){
 				padding: '2px 4px',
 				display: 'flex',
 				alignItems: 'center',
-				width: 400,
+				width: 500,
 			},
 			input: {
 				flex: 1,
@@ -46,6 +46,20 @@ export default function getClasses(){
 			submitButton: {
 				padding: 10,
 			},
+			LineInput: {
+				flex: 1,
+			},
+			iconButton: {
+				padding: 10,
+			},
+			divider: {
+				height: 28,
+				margin: 4,
+			},
+			engine: {
+				minHeight: '400px',
+				minWidth:'280px',
+			}
 
 		});
 }
