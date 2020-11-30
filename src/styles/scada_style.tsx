@@ -58,7 +58,6 @@ export default function getClasses(){
 			},
 			engine: {
 				minHeight: '400px',
-				minWidth:'280px',
 			}
 
 		});

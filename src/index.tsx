@@ -10,6 +10,15 @@ const BrewTheme = createMuiTheme({
 	palette: {
 		primary: amber,
 	},
+	breakpoints: {
+    	values: {
+    	  xs: 0,
+    	  sm: 700,
+    	  md: 870,
+    	  lg: 1280,
+    	  xl: 1920,
+    	},
+  	},
 	overrides: {
 		MuiCard: {
 			root: {

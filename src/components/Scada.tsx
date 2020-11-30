@@ -776,7 +776,9 @@ export class Scada extends Component<{}, ScadaState>{
 						{this.state.datapointsIsLoaded &&
 							<Grid
 								item
-								xs={4}
+								xs={12}
+								sm={4}
+								md={4}
 							>
 								<EngineControl
 									datapoints={this.state.datapoints}
@@ -787,7 +789,9 @@ export class Scada extends Component<{}, ScadaState>{
 						{this.state.datapointsIsLoaded &&
 							<Grid
 								item
-								xs={4}
+								xs={12}
+								sm={5}
+								md={4}
 							>
 								<EngineInfo
 									width="5"
@@ -797,7 +801,9 @@ export class Scada extends Component<{}, ScadaState>{
 						}
 						<Grid
 							item
-            	            xs={4}
+							xs={12}
+							sm={3}
+							md={4}
 							>
 
 							<EngineTabButtons
