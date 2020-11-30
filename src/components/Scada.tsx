@@ -618,7 +618,7 @@ class EngineInfoLine extends Component<{ label: any, moduleId: string, deviceId:
 			<div>
 				<WebSocket onData={this.onData} moduleId={this.props.moduleId} deviceId={this.props.deviceId} datapointCode={this.props.datapointCode} />
 				<Typography
-					variant="h5"
+					variant="subtitle1"
 				>
 					{this.props.label}: {this.state.recievedValue} {this.props.unit}
 				</Typography>
