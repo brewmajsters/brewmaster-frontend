@@ -437,7 +437,7 @@ export class PipeHMI extends Component<HMIParams, HMIState> implements HMICompon
 
 }
 
-class LineDatapointSetter extends Component<{ label: string, id: string, moduleId: string, deviceId: string, datapointCode: string }, {}>{
+class LineDatapointSetter extends Component<{ label: string, id: string, moduleId: string, deviceId: string, datapointCode: string, unit: string }, {}>{
 	path: string;
 	data: string;
 	state = {
@@ -494,6 +494,7 @@ class LineDatapointSetter extends Component<{ label: string, id: string, moduleI
 					placeholder={String(this.state.recievedValue)}
 					inputProps={{ 'aria-label': this.props.label }}
 					onChange={this.onValueChange}
+					endAdornment={this.props.unit}
 
 				/>
 				</NumPad.Number>
@@ -601,7 +602,7 @@ class EngineTabButtons extends Component<{ width: any }, {}> {
 	}
 }
 
-class EngineInfoLine extends Component<{ label: any, moduleId: string, deviceId: string, datapointCode: string }, {}>{
+class EngineInfoLine extends Component<{ label: any, moduleId: string, deviceId: string, datapointCode: string, unit: string }, {}>{
 	state = {
 		recievedValue: 0
 	}
@@ -619,7 +620,7 @@ class EngineInfoLine extends Component<{ label: any, moduleId: string, deviceId:
 				<Typography
 					variant="h5"
 				>
-					{this.props.label}: {this.state.recievedValue}
+					{this.props.label}: {this.state.recievedValue} {this.props.unit}
 				</Typography>
 				<br />
 				<Divider />
@@ -674,6 +675,7 @@ class EngineInfo extends Component<{ datapoints: any, width: any }, {}>{
 											moduleId={ENGINE_MODULE_ID}
 											deviceId={ENGINE_ID}
 											datapointCode={datapoint.code}
+											unit={datapoint.unit_symbol}
 										/>
 									</tr>
 								)
@@ -725,6 +727,7 @@ class EngineControl extends Component<{ datapoints: any, width: any }, { datapoi
 									moduleId={ENGINE_MODULE_ID}
 									deviceId={ENGINE_ID}
 									datapointCode={datapoint.code}
+									unit={datapoint.unit_symbol}
 									key={i}
 								/>
 							)
