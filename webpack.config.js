@@ -6,6 +6,7 @@ module.exports = {
     entry: [
         'webpack-dev-server/client?http://0.0.0.0:80',
         'webpack/hot/only-dev-server',
+        "@babel/polyfill", 
         path.join(__dirname, '/src/index.tsx')
     ],
     resolve: {

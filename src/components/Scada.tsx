@@ -22,8 +22,7 @@ import TextField from '@material-ui/core/TextField';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Green from '@material-ui/core/colors/green'
-
-import { exec } from 'shelljs';
+import  NumPad  from 'react-numpad';
 
 const classes = getClasses();
 const BLOCK_HEIGHT = 133;
@@ -443,7 +442,8 @@ class LineDatapointSetter extends Component<{ label: string, id: string, moduleI
 	data: string;
 	state = {
 		value: 0,
-		recievedValue: 0
+		recievedValue: 0,
+		set: 0
 	}
 
 
@@ -453,9 +453,9 @@ class LineDatapointSetter extends Component<{ label: string, id: string, moduleI
 		})
 	}
 
-	onSubmit = () => {
+	onSubmit = (value) => {
 		var data = {};
-		data['value'] = this.state.value;
+		data['value'] = value;
 		fetch("http://" + HOST + "/device_datapoints/" + this.props.id, {
 			method: 'PATCH',
 			headers: { 'Content-Type': 'application/json' },
@@ -465,14 +465,15 @@ class LineDatapointSetter extends Component<{ label: string, id: string, moduleI
 	}
 
 	onData = (value) => {
-		this.setState({
-			recievedValue: value
-		})
+		if (this.state.set == 0){
+			this.setState({
+				recievedValue: value
+			})
+		}
 	}
 
-	keybordUp = (event) => {
-		exec('matchbox-keyboard');
-	}
+
+
 
 	render() {
 		return (
@@ -485,22 +486,17 @@ class LineDatapointSetter extends Component<{ label: string, id: string, moduleI
 						{this.props.label}:
 					</Typography>
 				</label>
+				<NumPad.Number
+				    onChange={this.onSubmit}
+				>
 				<InputBase
-					fullWidth
 					style={classes.LineInput}
 					placeholder={String(this.state.recievedValue)}
 					inputProps={{ 'aria-label': this.props.label }}
 					onChange={this.onValueChange}
-					onClick={this.keybordUp}
-					endAdornment={
-						<Button
-							variant="contained"
-							onClick={this.onSubmit}
-						>
-							Submit
-						</Button>
-					}
+
 				/>
+				</NumPad.Number>
 				<Divider />
 			</div>
 		)
@@ -855,12 +851,6 @@ export class Scada extends Component<{}, ScadaState>{
 						<EngineTabButtons
 							width={5}
 						/>
-					</Grid>
-					<Grid
-						item
-						xs={12}
-					>
-						<EngineHMI />
 					</Grid>
 				</Grid>
 			</div>
