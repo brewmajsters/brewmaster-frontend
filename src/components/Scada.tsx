@@ -23,13 +23,15 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Green from '@material-ui/core/colors/green'
 
+import { exec } from 'shelljs';
+
 const classes = getClasses();
 const BLOCK_HEIGHT = 133;
 const HOST = process.env.BACKEND_HOST + ":" + process.env.BACKEND_PORT;
 
 const ENGINE_ID = process.env.ENGINE_ID
 const ENGINE_MODULE_ID = process.env.ENGINE_MODULE_ID
-const ENGINE_MOTION_SET_DATAPOINT= process.env.ENGINE_MOTION_SET_DATAPOINT
+const ENGINE_MOTION_SET_DATAPOINT = process.env.ENGINE_MOTION_SET_DATAPOINT
 
 const MOTOR_UUID = process.env.MOTOR_UUID
 const MOTOR_ID = process.env.MOTOR_ID
@@ -54,6 +56,7 @@ type HMIParams = {
 	moduleId?: string,
 	datapoint?: string,
 	angle?: number,
+	isSetable?: boolean,
 	height: number,
 	width: any,
 }
@@ -105,7 +108,7 @@ export class MotorHMI extends Component<HMIParams, HMIState> implements HMICompo
 		data["datapoint"] = this.props.setDatapoint;
 		data["value"] = this.state.input;
 		fetch("http://" + HOST + "/modules/" + String(this.props.moduleId + "/set_value"), {
-			method: 'POST',
+			method: '',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(data)
 		}).then(res => {
@@ -127,7 +130,7 @@ export class MotorHMI extends Component<HMIParams, HMIState> implements HMICompo
 
 	onData = (value) => {
 		this.setState({
-			rpm: value * 30 / 100
+			rpm: value 
 		})
 	}
 
@@ -162,22 +165,29 @@ export class MotorHMI extends Component<HMIParams, HMIState> implements HMICompo
 							{this.state.rpm} rpm
 						</Typography>
 					</div>
-					<ButtonBase
-						aria-describedby={this.props.id}
-						onClick={this.handleClick}
-					>
-						<img src="/public/motor_black2.png" alt="motor" height={this.height} ></img>
-						<WebSocket onData={this.onData} moduleId={this.props.moduleId} deviceId={this.props.uuid} datapointCode={this.props.datapoint} />
 
-						<Popover id={this.props.id} anchorEl={this.anchorEl} onClose={this.handleClose} open={this.state.open}>
-							<form>
-								<TextField id={this.props.id} label="Desired Value" onChange={this.handleChangeDesiredValue} />
-								<br />
-								<Button onClick={this.onSubmitDesiredValue}> Submit! </Button>
-							</form>
-						</Popover>
-					</ButtonBase>
-
+					{this.props.isSetable &&
+						<ButtonBase
+							aria-describedby={this.props.id}
+							onClick={this.handleClick}
+						>
+							<img src="/public/motor_black2.png" alt="motor" height={this.height} ></img>
+							<WebSocket onData={this.onData} moduleId={this.props.moduleId} deviceId={this.props.uuid} datapointCode={this.props.datapoint} />
+							<Popover id={this.props.id} anchorEl={this.anchorEl} onClose={this.handleClose} open={this.state.open}>
+								<form>
+									<TextField id={this.props.id} label="Desired Value" onChange={this.handleChangeDesiredValue} />
+									<br />
+									<Button onClick={this.onSubmitDesiredValue}> Submit! </Button>
+								</form>
+							</Popover>
+						</ButtonBase>
+					}
+					{	this.props.isSetable == false &&
+						<div>
+							<WebSocket onData={this.onData} moduleId={ENGINE_MODULE_ID} deviceId={ENGINE_ID} datapointCode={"SPEED"} />
+							<img src="/public/motor_black2.png" alt="motor" height={this.height} ></img>
+						</div>
+					}
 				</div>
 			</Grid>
 		)
@@ -460,6 +470,10 @@ class LineDatapointSetter extends Component<{ label: string, id: string, moduleI
 		})
 	}
 
+	keybordUp = (event) => {
+		exec('matchbox-keyboard');
+	}
+
 	render() {
 		return (
 			<div>
@@ -477,6 +491,7 @@ class LineDatapointSetter extends Component<{ label: string, id: string, moduleI
 					placeholder={String(this.state.recievedValue)}
 					inputProps={{ 'aria-label': this.props.label }}
 					onChange={this.onValueChange}
+					onClick={this.keybordUp}
 					endAdornment={
 						<Button
 							variant="contained"
@@ -531,11 +546,11 @@ class EngineTabButtons extends Component<{ width: any }, {}> {
 	}
 	state = {
 		value: 0,
-		engine_state: "FWD" 
+		engine_state: "FWD"
 	}
 
 	onData = (value) => {
-		this.setState({value: Math.floor(value)});
+		this.setState({ value: Math.floor(value) });
 	}
 
 
@@ -557,7 +572,7 @@ class EngineTabButtons extends Component<{ width: any }, {}> {
 	render() {
 		return (
 			<Card
-			style={classes.engine}	
+				style={classes.engine}
 			>
 				<WebSocket onData={this.onData} moduleId={ENGINE_MODULE_ID} deviceId={ENGINE_ID} datapointCode="SET_MOTION" />
 				<Typography
@@ -579,7 +594,7 @@ class EngineTabButtons extends Component<{ width: any }, {}> {
 					>
 						{ENGINE_MOTION_STATES.map((motion, i) => {
 							return (
-							< Tab key={i} label={motion}/> 
+								< Tab key={i} label={motion} />
 							)
 						}
 						)}
@@ -608,7 +623,7 @@ class EngineInfoLine extends Component<{ label: any, moduleId: string, deviceId:
 				<Typography
 					variant="h5"
 				>
-					{this.props.label}: {this.state.recievedValue} 
+					{this.props.label}: {this.state.recievedValue}
 				</Typography>
 				<br />
 				<Divider />
@@ -640,7 +655,7 @@ class EngineInfo extends Component<{ datapoints: any, width: any }, {}>{
 	render() {
 		return (
 			<Card
-style={classes.engine}
+				style={classes.engine}
 			>
 				<Typography
 					component="h2"
@@ -705,27 +720,58 @@ class EngineControl extends Component<{ datapoints: any, width: any }, { datapoi
 					Engine Control:
 				</Typography>
 				<CardContent>
-						{this.props.datapoints.map((datapoint, i) => {
-							if (datapoint.writable && datapoint.code != "SET_MOTION") {
-								return (
-										<LineDatapointSetter
-											label={datapoint.name}
-											id={datapoint.id}
-											moduleId={ENGINE_MODULE_ID}
-											deviceId={ENGINE_ID}
-											datapointCode={datapoint.code}
-											key={i}
-										/>
-								)
-							}
+					{this.props.datapoints.map((datapoint, i) => {
+						if (datapoint.writable && datapoint.code != "SET_MOTION") {
+							return (
+								<LineDatapointSetter
+									label={datapoint.name}
+									id={datapoint.id}
+									moduleId={ENGINE_MODULE_ID}
+									deviceId={ENGINE_ID}
+									datapointCode={datapoint.code}
+									key={i}
+								/>
+							)
 						}
-						)}
+					}
+					)}
 				</CardContent>
 			</Card>
 		)
 	}
 }
 
+class EngineHMI extends Component<{}, {}>{
+
+	render() {
+		return (
+			<Card>
+				<Typography
+					component="h2"
+					variant="h5"
+					align="center"
+					color="primary"
+				>
+					Engine HMI:
+				</Typography>
+				<CardContent>
+					<ContainerHMI>
+						<TransmisionHMI
+							height={2}
+							width={2}
+						/>
+						<MotorHMI
+							height={2}
+							width={2}
+							isSetable={false}
+						/>
+					</ContainerHMI>
+				</CardContent>
+			</Card>
+		)
+	}
+
+}
 
 export class Scada extends Component<{}, ScadaState>{
 	state = {
@@ -768,49 +814,55 @@ export class Scada extends Component<{}, ScadaState>{
 		return (
 
 			<div>
-				<Grid container  
-					spacing={1} 	
-					alignItems="center"	
+				<Grid container
+					spacing={1}
+					alignItems="center"
 				>
 
-						{this.state.datapointsIsLoaded &&
-							<Grid
-								item
-								xs={12}
-								sm={4}
-								md={4}
-							>
-								<EngineControl
-									datapoints={this.state.datapoints}
-									width="5"
-								/>
-							</Grid>
-						}
-						{this.state.datapointsIsLoaded &&
-							<Grid
-								item
-								xs={12}
-								sm={5}
-								md={4}
-							>
-								<EngineInfo
-									width="5"
-									datapoints={this.state.datapoints}
-								/>
-							</Grid>
-						}
+					{this.state.datapointsIsLoaded &&
 						<Grid
 							item
 							xs={12}
-							sm={3}
+							sm={4}
 							md={4}
-							>
-
-							<EngineTabButtons
-								width={5}
+						>
+							<EngineControl
+								datapoints={this.state.datapoints}
+								width="5"
 							/>
 						</Grid>
+					}
+					{this.state.datapointsIsLoaded &&
+						<Grid
+							item
+							xs={12}
+							sm={5}
+							md={4}
+						>
+							<EngineInfo
+								width="5"
+								datapoints={this.state.datapoints}
+							/>
+						</Grid>
+					}
+					<Grid
+						item
+						xs={12}
+						sm={3}
+						md={4}
+					>
+
+						<EngineTabButtons
+							width={5}
+						/>
 					</Grid>
+					<Grid
+						item
+						xs={12}
+					>
+						<EngineHMI />
+					</Grid>
+				</Grid>
 			</div>
 		)
 	}
