@@ -614,13 +614,16 @@ class EngineInfoLine extends Component<{ label: any, moduleId: string, deviceId:
 	}
 
 	render() {
-		return (
-			<div>
+		return(
+			<div style={{width: "inherit"}}>
 				<WebSocket onData={this.onData} moduleId={this.props.moduleId} deviceId={this.props.deviceId} datapointCode={this.props.datapointCode} />
 				<Typography
 					variant="subtitle1"
+					align="left"
+					display={"inline"}
 				>
-					{this.props.label}: {this.state.recievedValue} {this.props.unit}
+					{this.props.label}:  {this.state.recievedValue} {this.props.unit}
+				
 				</Typography>
 				<br />
 				<Divider />
@@ -663,26 +666,21 @@ class EngineInfo extends Component<{ datapoints: any, width: any }, {}>{
 					Engine Info:
 				</Typography>
 				<CardContent>
-					<table>
 						{this.props.datapoints.map((datapoint, i) => {
 							if (!datapoint.writable) {
 								return (
-									<tr
-										key={i}
-									>
 										<EngineInfoLine
 											label={datapoint.name}
 											moduleId={ENGINE_MODULE_ID}
 											deviceId={ENGINE_ID}
 											datapointCode={datapoint.code}
 											unit={datapoint.unit_symbol}
+											key={i}
 										/>
-									</tr>
 								)
 							}
 						}
 						)}
-					</table>
 				</CardContent>
 			</Card>
 		)
