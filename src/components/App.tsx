@@ -19,8 +19,7 @@ const classes= {
 			body: {
 			},
 			main:{
-				marginTop: 20,
-				marginLeft: 20,
+				marginTop: 20
 			}
 		};
 
@@ -33,15 +32,6 @@ export default class App extends Component{
 	render () {
 		return (
 			<BrowserRouter>
-						<Grid 
-							container 
-							spacing={2}
-						>
-							<Grid 
-								item
-								container
-								xs={12}
-							>
 								<div 
 									style={classes.main}
 								>
@@ -65,8 +55,6 @@ export default class App extends Component{
 										</div>
 									</Switch>
 								</div>
-							</Grid>
-						</Grid>
 			</BrowserRouter>
 		);
 	}

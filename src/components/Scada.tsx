@@ -447,7 +447,7 @@ class LineDatapointSetter extends Component<{ label: string, id: string, moduleI
 		var data = {};
 		data['value'] = this.state.value;
 		fetch("http://" + HOST + "/device_datapoints/" + this.props.id, {
-			method: 'POST',
+			method: 'PATCH',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(data)
 		}).then(res => {
@@ -546,7 +546,7 @@ class EngineTabButtons extends Component<{ width: any }, {}> {
 		var data = {};
 		data['value'] = ENGINE_MOTION_STATES[newValue];
 		fetch("http://" + HOST + "/device_datapoints/" + ENGINE_MOTION_SET_DATAPOINT, {
-			method: 'POST',
+			method: 'PATCH',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(data)
 		}).then(res => {
@@ -705,26 +705,21 @@ class EngineControl extends Component<{ datapoints: any, width: any }, { datapoi
 					Engine Control:
 				</Typography>
 				<CardContent>
-					<table>
 						{this.props.datapoints.map((datapoint, i) => {
 							if (datapoint.writable && datapoint.code != "SET_MOTION") {
 								return (
-									<tr
-										key={i}
-									>
 										<LineDatapointSetter
 											label={datapoint.name}
 											id={datapoint.id}
 											moduleId={ENGINE_MODULE_ID}
 											deviceId={ENGINE_ID}
 											datapointCode={datapoint.code}
+											key={i}
 										/>
-									</tr>
 								)
 							}
 						}
 						)}
-					</table>
 				</CardContent>
 			</Card>
 		)
@@ -773,10 +768,15 @@ export class Scada extends Component<{}, ScadaState>{
 		return (
 
 			<div>
-				<Grid container spacing={2} >
+				<Grid container  
+					spacing={1} 	
+					alignItems="center"	
+				>
+
 						{this.state.datapointsIsLoaded &&
 							<Grid
 								item
+								xs={4}
 							>
 								<EngineControl
 									datapoints={this.state.datapoints}
@@ -787,6 +787,7 @@ export class Scada extends Component<{}, ScadaState>{
 						{this.state.datapointsIsLoaded &&
 							<Grid
 								item
+								xs={4}
 							>
 								<EngineInfo
 									width="5"
@@ -796,6 +797,7 @@ export class Scada extends Component<{}, ScadaState>{
 						}
 						<Grid
 							item
+            	            xs={4}
 							>
 
 							<EngineTabButtons
