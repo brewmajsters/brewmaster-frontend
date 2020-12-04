@@ -59,7 +59,7 @@ class ShutdownButton extends Component {
 	  }; 
 
 	  handleShutdown = () => {
-		fetch("http://" + HOST + "/shutdown/", {
+		fetch("http://" + HOST + "/shutdown", {
 			method: 'GET',
 			headers: { 'Content-Type': 'application/json' },
 		}).then(res => (
