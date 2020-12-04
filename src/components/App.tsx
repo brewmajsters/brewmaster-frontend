@@ -33,7 +33,7 @@ const classes= {
 				marginTop: 0
 			}, 
 			sButton:{
-				position: 'absolute' as 'absolute',
+				position: 'fixed' as 'fixed',
 				bottom: '20px',
 				right: '20px'
 			}
